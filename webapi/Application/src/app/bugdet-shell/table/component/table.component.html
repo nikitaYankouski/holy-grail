@@ -22,8 +22,8 @@
 				<td class="col-md">
 					{{ operation.timestamp }}
 				</td>
-				<td class="col-md">
-					{{ operation.amountOfMoney }}
+				<td class="col-md" [className]="operation.isIncome ? 'cash-in' : 'cash-out'">
+					{{ operation.amountOfMoney }} zł
 				</td>
 				<td class="col-md">
 					{{ operation.balance }}

@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TableComponent } from './table/table.component';
+import { BugdetShellComponent } from './bugdet-shell/bugdet-shell.component';
 
 const routes: Routes = [
-  { path: '', component: TableComponent, pathMatch: 'full' },
-  { path: '**', redirectTo: '/' },
+  { path: 'budget', component: BugdetShellComponent, pathMatch: 'full' },
+  { path: '**', redirectTo: '/budget' }
 ];
 
 @NgModule({

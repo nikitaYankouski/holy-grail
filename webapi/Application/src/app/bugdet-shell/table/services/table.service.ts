@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { of, Observable } from "rxjs";
 import { retry, catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Operation } from './operation';
 import { environment } from 'src/environments/environment'
+import { Operation } from '../operation';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,6 @@ export class TableService {
     .pipe(
       map((operations: Operation[]) => 
         operations.map(operation => this.cast(operation))),
-      retry(1),
       catchError(this.handleError<any>('getOperations'))
     );
   }
@@ -40,16 +39,18 @@ export class TableService {
 
   // CAST 
 
-  cast(operation: Operation) : Operation {
+  private cast(operation: Operation) : Operation {
     let model = { 
       id: operation.id,
       budgetId: operation.budgetId, 
       description: operation.description,
-      IsIncome: operation.IsIncome,
+      isIncome: operation.isIncome,
       amountOfMoney: operation.amountOfMoney,
       timestamp: operation.timestamp.substr(0,10),
       balance: operation.balance 
     }
     return model;
   }
+
+
 }
