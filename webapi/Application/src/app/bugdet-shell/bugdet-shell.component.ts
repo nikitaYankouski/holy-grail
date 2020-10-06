@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Operation } from './table/operation';
 
 @Component({
   selector: 'app-bugdet-shell',
@@ -8,12 +9,18 @@ import { Component, OnInit } from '@angular/core';
 export class BugdetShellComponent implements OnInit {
   bankBuffer: number;
 
+  operationsBuffer: Operation[];
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  refreshBankBuffer(newValue: number) {
-    this.bankBuffer = newValue;
+  refreshBankBuffer(bank: number) {
+    this.bankBuffer = bank;
+  }
+
+  refreshOperations(operations: Operation[]) {
+    this.operationsBuffer = operations;
   }
 }

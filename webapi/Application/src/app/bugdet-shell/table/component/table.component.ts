@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChange } from "@angular/core";
+import { Component, Input, OnInit, Output, SimpleChange, EventEmitter } from "@angular/core";
 import { moveItemInArray, CdkDragDrop } from "@angular/cdk/drag-drop";
 import { from, Observable, Subscription } from "rxjs";
 
@@ -13,7 +13,9 @@ import { CalculatorService } from '../services/calculator.service';
 })
 export class TableComponent implements OnInit {
   @Input() bank: number;
-  
+
+  @Output() operationsChart = new EventEmitter<Operation[]>();
+
   operations: Operation[];
 
   constructor(
@@ -49,6 +51,11 @@ export class TableComponent implements OnInit {
     this.operations.forEach((operation, idx) => {
       operation.id = idx + 1;
     });
+
+    let operationSwitchTime = this.operations.find(it => it.id === event.currentIndex + 1);
+    operationSwitchTime.timestamp = this.operations.find(it => it.id === event.currentIndex).timestamp;
+
     this.operations = this.calculateApi.calculation(this.operations, this.bank);
+    this.operationsChart.emit([...this.operations]);
   }
 }

@@ -1,2 +1,3 @@
+<app-chart [operations]="operationsBuffer"></app-chart>
 <app-input (bank)="refreshBankBuffer($event)"></app-input>
-<app-table [bank]="bankBuffer"></app-table>
+<app-table [bank]="bankBuffer" (operationsChart)="refreshOperations($event)"></app-table>
