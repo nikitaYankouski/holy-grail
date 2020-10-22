@@ -7,7 +7,7 @@ import { Output, EventEmitter } from '@angular/core';
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements OnInit {
-  @Output() bank = new EventEmitter<number>();
+  @Output() enteringBank = new EventEmitter<number>();
 
   constructor() { }
 
@@ -15,6 +15,6 @@ export class InputComponent implements OnInit {
   }
 
   onKey(value: string) {
-    this.bank.emit(parseInt(value));
+    this.enteringBank.emit(parseInt(value));
   }
 }

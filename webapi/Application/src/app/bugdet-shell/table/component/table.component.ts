@@ -1,10 +1,12 @@
-import { Component, Input, OnInit, Output, SimpleChange, EventEmitter } from "@angular/core";
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from "@angular/core";
 import { moveItemInArray, CdkDragDrop } from "@angular/cdk/drag-drop";
-import { from, Observable, Subscription } from "rxjs";
 
-import { TableService } from "../services/table.service";
-import { Operation } from "../operation"
-import { CalculatorService } from '../services/calculator.service';
+import { BugdetShellService } from '../../bugdet-shell.service';
+import { TableService } from '../services/table.service';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+
+import { ViewOperation } from '../../view-operation';
 
 @Component({
   selector: 'app-table',
@@ -12,37 +14,62 @@ import { CalculatorService } from '../services/calculator.service';
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent implements OnInit {
-  @Input() bank: number;
+  private _bank: number;
 
-  @Output() operationsChart = new EventEmitter<Operation[]>();
+  get bank(): number {
+    return this._bank;
+  }
+  @Input() set bank(value: number) {
+    this._bank = value;
+    this.inputBank();
+  }
 
-  operations: Operation[];
+  private _operations: ViewOperation[];
+
+  get operations(): ViewOperation[] {
+    return this._operations;
+  }
+  set operations(value: ViewOperation[]) {
+    this._operations = value;
+  }
+
+  dataSource = new MatTableDataSource<ViewOperation>(this.operations);
+  
+  @Output() operationsChart = new EventEmitter<ViewOperation[]>();
+
+  @ViewChild(MatSort) sort: MatSort;
+
+  displayedColumns: string[] = [
+    'description',
+    'timestamp',
+    'cashIn',
+    'cashOut',
+    'balance'
+  ]
 
   constructor(
-    private operationsApi: TableService, 
-    private calculateApi: CalculatorService
+    private service: TableService,
+    private budgetApi: BugdetShellService,
   ) { }
 
-  ngOnInit(): void {
-    this.getOperations();
-  }
-
-  ngOnChanges(changes: SimpleChange) {
-    this.getOperationsCalc();
-  }
+  ngOnInit(): void { }
 
   getOperations() {
-    this.operationsApi.getOperations().subscribe(operations => {
+    this.budgetApi.getOperations().subscribe(operations => {
       this.operations = operations;
+      this.refreshData();
     });
-    
   }
 
-  getOperationsCalc() {
-    if ((typeof this.bank !== 'undefined') && (typeof this.bank !== 'string')) {
-      this.operationsApi.getOperations().subscribe(operations => {
-        this.operations = this.calculateApi.calculation(operations, this.bank);
-      });
+  clickSort() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.connect().subscribe(element => this.operations = element);
+    this.refreshData();
+  }
+
+  balanceСalculation(asynOperationsTable: ViewOperation[]): ViewOperation[] {
+    if ((typeof this.bank !== 'undefined') && (typeof this.bank !== "string")) {
+      return this.budgetApi.balanceСalculation(asynOperationsTable, this.bank);
     }
   }
 
@@ -52,10 +79,24 @@ export class TableComponent implements OnInit {
       operation.id = idx + 1;
     });
 
-    let operationSwitchTime = this.operations.find(it => it.id === event.currentIndex + 1);
-    operationSwitchTime.timestamp = this.operations.find(it => it.id === event.currentIndex).timestamp;
+    if (event.currentIndex !== event.previousIndex) {
+      this.service.timeChange(this.operations, event.currentIndex);
+      this.refreshData();
+    }
+  }
 
-    this.operations = this.calculateApi.calculation(this.operations, this.bank);
-    this.operationsChart.emit([...this.operations]);
+  refreshData() {
+    this.balanceСalculation(this.operations);
+    this.dataSource.data = this.operations;
+    this.operationsChart.emit([...this.budgetApi.castNewObject(this.operations)]);
+  }
+
+  inputBank() {
+    if (typeof this.operations === 'undefined') {
+      this.getOperations();
+    }
+    else {
+      this.refreshData();
+    }
   }
 }

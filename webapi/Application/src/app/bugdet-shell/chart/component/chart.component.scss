@@ -1,0 +1,26 @@
+.container {
+    display: block;
+    width: 60%;
+    margin: auto;
+}
+
+.button {
+    margin-left: 10px;
+}
+
+.button:hover {
+    background-color: #aec4d4;
+}
+
+.button-selected {
+    background-color:#86c7f3;
+}
+
+.button-row {
+    padding: 5px;
+}
+
+#go {
+    cursor: pointer;
+}
+

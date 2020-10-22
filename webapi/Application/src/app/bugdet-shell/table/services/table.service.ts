@@ -1,56 +1,23 @@
-import { Injectable } from "@angular/core";
-import { of, Observable } from "rxjs";
-import { retry, catchError, map } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from 'src/environments/environment'
-import { Operation } from '../operation';
+import { Injectable } from '@angular/core';
+import { BaseOperation } from '../../base-operation';
+import { ViewOperation } from '../../view-operation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TableService {
-  myAppUrl: string;
 
-  httpOptions = {
-    headers: new HttpHeaders({'Content-Type': 'application/json; charset=utf-8'})
-  };
+  constructor() { }
 
-  constructor(private http: HttpClient) {
-    this.myAppUrl = environment.appUrl;
+  timeChange(operations: ViewOperation[], currentIndex: number) {
+    const operationSwitchTime = operations.find(operation => (operation.id === currentIndex + 1));
+
+    operationSwitchTime.timestamp = currentIndex === 0 ? 
+      this.getTimeStamp(operations, currentIndex + 2) : currentIndex > operations.length ? 
+        this.getTimeStamp(operations, currentIndex) : this.getTimeStamp(operations, currentIndex);
   }
 
-  getOperations(): Observable<Operation[]> {
-    return this.http.get<Operation[]>(this.myAppUrl)
-    .pipe(
-      map((operations: Operation[]) => 
-        operations.map(operation => this.cast(operation))),
-      catchError(this.handleError<any>('getOperations'))
-    );
+  private getTimeStamp(operations: ViewOperation[], indexInTable: number): string {
+    return operations.find(operation => operation.id === indexInTable).timestamp;
   }
-
-  // ERROR
-
-  private handleError<T>(result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(error);
-      return of(result as T);
-    };
-  }
-
-  // CAST 
-
-  private cast(operation: Operation) : Operation {
-    let model = { 
-      id: operation.id,
-      budgetId: operation.budgetId, 
-      description: operation.description,
-      isIncome: operation.isIncome,
-      amountOfMoney: operation.amountOfMoney,
-      timestamp: operation.timestamp.substr(0,10),
-      balance: operation.balance 
-    }
-    return model;
-  }
-
-
 }

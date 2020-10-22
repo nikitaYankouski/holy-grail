@@ -1,9 +1,9 @@
-export interface Operation {
+export interface ViewOperation {
     id: number;
     budgetId: number;
     description: number;
-    isIncome: boolean;
     timestamp: string;
-    amountOfMoney: number;
+    cashIn: number;
+    cashOut: number;
     balance: number;
 }

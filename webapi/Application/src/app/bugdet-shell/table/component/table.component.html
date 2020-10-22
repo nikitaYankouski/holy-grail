@@ -1,37 +1,33 @@
 <div class="content">
-	<table class="table">
-		<thead>
-			<tr>
-				<th scope="col"></th>
-				<th scope="col">DESCRIPTION</th>
-				<th scope="col">DATE</th>
-                <th scope="col">CASH</th>
-                <th scope="col">BALANCE</th>
-			</tr>
-		</thead>
-		<tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
-			<tr *ngFor="let operation of operations" cdkDrag cdkDragLockAxis="y">
-				<th class="col-xs">
-					<div class="drag-handle">
-						<ng-container [ngTemplateOutlet]="dragHandleTmpl"></ng-container>
-					</div>
-				</th>
-				<td class="col-md">
-					{{ operation.description }}
-				</td>
-				<td class="td col-md">
-					{{ operation.timestamp }}
-				</td>
-				<td class="td col-md">
-					<div [className]="operation.isIncome ? 'cash-in' : 'cash-out'">
-						{{ operation.amountOfMoney }} zł
-					</div>
-				</td>
-				<td class="td col-md">
-					{{ operation.balance }}
-				</td>
-			</tr>
-		</tbody>
+	<table mat-table [dataSource]="dataSource" matSort matSortDisableClear (matSortChange)="clickSort()" 
+		cdkDropList (cdkDropListDropped)="onDrop($event)" class="table">
+		<ng-container matColumnDef="description">
+		  <th mat-header-cell *matHeaderCellDef> Description </th>
+		  <td mat-cell *matCellDef="let element" class="col-md"> {{element.description}} </td>
+		</ng-container>
+	  
+		<ng-container matColumnDef="timestamp">
+		  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+		  <td mat-cell *matCellDef="let element" class="col-sm"> {{element.timestamp}} </td>
+		</ng-container>
+	  
+		<ng-container matColumnDef="cashIn">
+		  <th mat-header-cell *matHeaderCellDef> Cash in </th>
+		  <td mat-cell *matCellDef="let element" class="col-sm"> {{element.cashIn}} </td>
+		</ng-container>
+	  
+		<ng-container matColumnDef="cashOut">
+		  <th mat-header-cell *matHeaderCellDef> Cash out </th>
+		  <td mat-cell *matCellDef="let element" class="col-sm"> {{element.cashOut}} </td>
+		</ng-container>
+
+		<ng-container matColumnDef="balance">
+			<th mat-header-cell *matHeaderCellDef> Balance </th>
+			<td mat-cell *matCellDef="let element" class="col-sm"> {{element.balance}} </td>
+		</ng-container>
+	  
+		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag cdkDragLockAxis="y"></tr>
 	</table>
 </div>
 <ng-template #dragHandleTmpl>

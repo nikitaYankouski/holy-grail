@@ -1,0 +1,19 @@
+<div class="container">    
+    <canvas baseChart
+        [datasets]="barChartData"
+        [labels]="barChartLabels"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [legend]="barChartLegend"
+        [chartType]="barChartType">
+    </canvas>
+</div>
+
+<div class="container button-row">
+    <button mat-raised-button class="button" (click)="grouping('day')" 
+        [ngClass]="{'button-selected': filter.name === 'day'}">Day</button>
+    <button mat-raised-button class="button" (click)="grouping('month')"
+        [ngClass]="{'button-selected': filter.name === 'month'}">Month</button>
+    <button mat-raised-button class="button" (click)="grouping('year')"
+        [ngClass]="{'button-selected': filter.name === 'year'}">Year</button>
+</div>
