@@ -92,7 +92,7 @@ export class ChartComponent implements OnInit {
   };
   
   barChartData: ChartDataSets[] = [
-    { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1'},
+    { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1', fill: false},
     { data: [], label: DirectionsChart.cashIn, yAxisID: 'y-axis-0', stack: 'a' },
     { data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'a' },
   ];
