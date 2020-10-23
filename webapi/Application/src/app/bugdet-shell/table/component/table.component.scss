@@ -55,22 +55,20 @@
     margin-bottom: 2em;
   }
 
+  .color-cashIn {
+    color: rgb(96, 211, 148);
+  }
+
+  .color-cashOut {
+    color: rgb(238, 96, 85);
+  }
+
   // CELL
 
   .mat-cell:nth-child(5) {
     text-align: right;
     justify-content:right;
   }
-
-  // .mat-cell:nth-child(4) {
-  //   text-align: right;
-  //   justify-content:right;
-  // }
-
-  // .mat-cell:nth-child(2) {
-  //   text-align: center;
-  //   justify-content:center;
-  // }
 
   // HEADER
 
@@ -93,8 +91,3 @@
     text-align: center;
     justify-content: center;
   }
-
-  // ::ng-deep .mat-sort-header-container {
-  //   display:flex;
-  //   justify-content:center;
-  // }
