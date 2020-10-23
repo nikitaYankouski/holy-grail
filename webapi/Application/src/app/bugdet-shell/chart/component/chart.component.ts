@@ -68,7 +68,10 @@ export class ChartComponent implements OnInit {
           id: 'y-axis-0',
           position: 'left',
           ticks: {
-            beginAtZero: true
+            beginAtZero: true,
+            callback: function(value, index, values) {
+              return value + ' PLN';
+            }
           }
         },
         {
@@ -78,7 +81,10 @@ export class ChartComponent implements OnInit {
             display: false
           },
           ticks: {
-            beginAtZero: true
+            beginAtZero: true,
+            callback: function(value, index, values) {
+              return value + ' PLN';
+            }
           }
         }
       ],
@@ -109,7 +115,7 @@ export class ChartComponent implements OnInit {
     },
     // cash out
     {
-      backgroundColor: 'rgb(238, 96, 85)'
+      backgroundColor: 'rgb(255, 155, 133)'
     }
   ];
   
