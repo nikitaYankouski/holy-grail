@@ -10,10 +10,12 @@
 </div>
 
 <div class="container button-row">
+    <button mat-raised-button class="button" (click)="grouping('noFilter')"
+        [ngClass]="{'button-selected': currentFilter.name === 'noFilter'}">No grouping</button>
     <button mat-raised-button class="button" (click)="grouping('day')" 
-        [ngClass]="{'button-selected': filter.name === 'day'}">Day</button>
+        [ngClass]="{'button-selected': currentFilter.name === 'day'}">Day</button>
     <button mat-raised-button class="button" (click)="grouping('month')"
-        [ngClass]="{'button-selected': filter.name === 'month'}">Month</button>
+        [ngClass]="{'button-selected': currentFilter.name === 'month'}">Month</button>
     <button mat-raised-button class="button" (click)="grouping('year')"
-        [ngClass]="{'button-selected': filter.name === 'year'}">Year</button>
+        [ngClass]="{'button-selected': currentFilter.name === 'year'}">Year</button>
 </div>

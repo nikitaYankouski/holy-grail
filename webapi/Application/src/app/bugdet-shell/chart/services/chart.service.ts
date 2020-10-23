@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ViewOperation } from '../../view-operation';
 import { Filter } from './grouping-model/filter';
+import { FilterTypes } from './grouping-model/filter-types';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,10 @@ export class ChartService {
   constructor() { }
   
   grouping(operations: ViewOperation[], filter: Filter): ViewOperation[] {
+    if (filter === FilterTypes.noFilter) {
+      return operations;
+    }
+
     operations.forEach((parentOperation, index) => {
       let stringFilter = parentOperation.timestamp.substr(filter.from, filter.length);
       parentOperation.timestamp = stringFilter;

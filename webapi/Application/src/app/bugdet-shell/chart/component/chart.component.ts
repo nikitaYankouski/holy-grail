@@ -23,26 +23,6 @@ enum DirectionsChart {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartComponent implements OnInit {
-  private _operations = [];
-
-  get operations(): ViewOperation[] {
-    return this._operations;
-  }
-  @Input() set operations(value: ViewOperation[]) {
-    this._operations = value;
-    this.refreshDataInChart(this.filter);
-  }
-
-  private _operationsGroped = [];
-
-  get operationsGroped(): ViewOperation[] {
-    return this._operationsGroped;
-  }
-
-  set operationsGroped(value: ViewOperation[]) {
-    this._operationsGroped = value;
-  }
-  
   private _bank: number;
 
   get bank(): number {
@@ -51,21 +31,35 @@ export class ChartComponent implements OnInit {
   @Input() set bank(value: number) {
     this._bank = value;
   }
+  
+  private _operations = [];
 
-  operationsView: ViewOperation[];
+  get operations(): ViewOperation[] {
+    return this._operations;
+  }
+  @Input() set operations(value: ViewOperation[]) {
+    this._operations = value;
+    this.refreshDataInChart(this.currentFilter);
+  }
+  
+  private _operationsGroped = [];
 
-  dataBalance: number[] = [];
+  get operationsGroped(): ViewOperation[] {
+    return this._operationsGroped;
+  }
+  set operationsGroped(value: ViewOperation[]) {
+    this._operationsGroped = value;
+  }
+  
 
-  labelDate: string[] = [];
-
-  cashIn: number[];
-
-  cashOut: number[];
-
+  barChartLabels: Label[] = [];
+  
+  barChartPlugins = [pluginDataLabels];
+  
   barChartType: ChartType = 'bar';
-
+  
   barChartLegend = true;
-
+  
   barChartOptions: ChartOptions = {
     responsive: true,
     scales: {
@@ -96,18 +90,23 @@ export class ChartComponent implements OnInit {
       }
     }
   };
-
+  
   barChartData: ChartDataSets[] = [
     { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1'},
     { data: [], label: DirectionsChart.cashIn, yAxisID: 'y-axis-0', stack: 'a' },
     { data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'a' },
   ];
+  
+  currentFilter: Filter = FilterTypes.noFilter;
 
-  barChartLabels: Label[] = [];
 
-  barChartPlugins = [pluginDataLabels];
+  dataBalance: number[] = [];
 
-  filter: Filter = FilterTypes.day;
+  labelDate: string[] = [];
+
+  cashIn: number[];
+
+  cashOut: number[];
 
   constructor(
     private chartService: ChartService,
@@ -158,18 +157,23 @@ export class ChartComponent implements OnInit {
   grouping(typeGrouping: string) {
     switch(typeGrouping) {
       case FilterTypes.day.name: {
-        this.filter = FilterTypes.day;
-        this.refreshDataInChart(FilterTypes.day);
+        this.currentFilter = FilterTypes.day;
+        this.refreshDataInChart(this.currentFilter);
         break;
       }
       case FilterTypes.month.name: {
-        this.filter = FilterTypes.month;
-        this.refreshDataInChart(FilterTypes.month);
+        this.currentFilter = FilterTypes.month;
+        this.refreshDataInChart(this.currentFilter);
         break;
       }
       case FilterTypes.year.name: {
-        this.filter = FilterTypes.year;
-        this.refreshDataInChart(FilterTypes.year)
+        this.currentFilter = FilterTypes.year;
+        this.refreshDataInChart(this.currentFilter);
+        break;
+      }
+      case FilterTypes.noFilter.name: {
+        this.currentFilter = FilterTypes.noFilter;
+        this.refreshDataInChart(this.currentFilter);
         break;
       }
     };

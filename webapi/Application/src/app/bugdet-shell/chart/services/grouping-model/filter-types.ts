@@ -18,4 +18,10 @@ export class FilterTypes {
         length: 10,
         name: 'day'
     };
+    
+    static noFilter: Filter = {
+        from: null,
+        length: null,
+        name: 'noFilter'
+    }
 } 
