@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Color, Label } from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
 import { ChartService } from '../services/chart.service';
@@ -95,6 +95,22 @@ export class ChartComponent implements OnInit {
     { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1', fill: false},
     { data: [], label: DirectionsChart.cashIn, yAxisID: 'y-axis-0', stack: 'a' },
     { data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'a' },
+  ];
+
+  barChartColors: Color[] = [
+    // balance
+    {
+      backgroundColor: 'rgb(255, 155, 133)',
+      borderColor: 'rgb(255, 217, 125)'
+    },
+    // cash in
+    { 
+      backgroundColor: 'rgb(96, 211, 148)'
+    },
+    // cash out
+    {
+      backgroundColor: 'rgb(238, 96, 85)'
+    }
   ];
   
   currentFilter: Filter = FilterTypes.noFilter;
