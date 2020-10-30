@@ -1,4 +1,4 @@
-export interface BaseOperation {
+export interface DBModel {
     id: number;
     budgetId: number;
     description: number;

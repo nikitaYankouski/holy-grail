@@ -1,8 +1,8 @@
-export interface ViewOperation {
+export interface Model {
     id: number;
     budgetId: number;
     description: number;
-    timestamp: string;
+    timestamp: Date;
     cashIn: number;
     cashOut: number;
     balance: number;

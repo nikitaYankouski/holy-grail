@@ -5,10 +5,15 @@ import { Color, Label } from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
 import { ChartService } from '../services/chart.service';
-import { ViewOperation } from '../../view-operation';
+import { Model } from '../../model';
 import { BugdetShellService } from '../../bugdet-shell.service';
-import { FilterTypes } from '../services/grouping-model/filter-types';
-import { Filter } from '../services/grouping-model/filter';
+
+import { Filter } from '../services/filter/filter';
+import { FilterDay } from '../services/filter/filter-day';
+import { FilterMonth } from '../services/filter/filter-month';
+import { FilterYear } from '../services/filter/filter-year';
+import { NoFilter } from '../services/filter/no-filter';
+import { ViewModelChart } from '../view-model-chart';
 
 enum DirectionsChart {
   balance = 'BALANCE',
@@ -24,7 +29,6 @@ enum DirectionsChart {
 })
 export class ChartComponent implements OnInit {
   private _bank: number;
-
   get bank(): number {
     return this._bank;
   }
@@ -33,24 +37,24 @@ export class ChartComponent implements OnInit {
   }
   
   private _operations = [];
-
-  get operations(): ViewOperation[] {
+  get operations(): Model[] {
     return this._operations;
   }
-  @Input() set operations(value: ViewOperation[]) {
+  @Input() set operations(value: Model[]) {
     this._operations = value;
     this.refreshDataInChart(this.currentFilter);
   }
   
   private _operationsGroped = [];
-
-  get operationsGroped(): ViewOperation[] {
+  get operationsGroped(): Model[] {
     return this._operationsGroped;
   }
-  set operationsGroped(value: ViewOperation[]) {
+  set operationsGroped(value: Model[]) {
     this._operationsGroped = value;
   }
   
+  viewModel: ViewModelChart[];
+
 
   barChartLabels: Label[] = [];
   
@@ -69,10 +73,11 @@ export class ChartComponent implements OnInit {
           position: 'left',
           ticks: {
             beginAtZero: true,
+            
             callback: function(value, index, values) {
               return value + ' PLN';
             }
-          }
+          },
         },
         {
           id: 'y-axis-1',
@@ -100,7 +105,7 @@ export class ChartComponent implements OnInit {
   barChartData: ChartDataSets[] = [
     { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1', fill: false},
     { data: [], label: DirectionsChart.cashIn, yAxisID: 'y-axis-0', stack: 'a' },
-    { data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'a' },
+    { data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'b' },
   ];
 
   barChartColors: Color[] = [
@@ -119,16 +124,7 @@ export class ChartComponent implements OnInit {
     }
   ];
   
-  currentFilter: Filter = FilterTypes.noFilter;
-
-
-  dataBalance: number[] = [];
-
-  labelDate: string[] = [];
-
-  cashIn: number[];
-
-  cashOut: number[];
+  currentFilter: Filter = new NoFilter();
 
   constructor(
     private chartService: ChartService,
@@ -142,59 +138,62 @@ export class ChartComponent implements OnInit {
       this.operationsGroped = this.chartService.grouping(
         this.budgetApi.castNewObject(this.operations), typeFilter
       );
+      this.operationsGroped = this.budgetApi.sortByDate(this.operationsGroped);
+
       this.budgetApi.balanceСalculation(this.operationsGroped, this.bank);
 
-      this.setDataToBufferForChart(this.operationsGroped);
+      this.setViewModel(this.operationsGroped);
       this.setDataInChart();
     }
   }
 
   setDataInChart() {
-    let rowBalance = this.barChartData.find(it => it.label === DirectionsChart.balance);
-    rowBalance.data = this.dataBalance;
-    
-    let rowCashIn = this.barChartData.find(it => it.label === DirectionsChart.cashIn);
-    rowCashIn.data = this.cashIn;
+    this.barChartData.find(it => it.label === DirectionsChart.balance)
+      .data = this.viewModel.map(it => it.balance);
 
-    let rowCashOut = this.barChartData.find(it => it.label === DirectionsChart.cashOut);
-    rowCashOut.data = this.cashOut;
+    this.barChartData.find(it => it.label === DirectionsChart.cashIn)
+      .data = this.viewModel.map(it => it.cashIn);
 
-    this.barChartLabels = this.labelDate;
+    this.barChartData.find(it => it.label === DirectionsChart.cashOut)
+      .data = this.viewModel.map(it => it.cashOut);
+
+    this.barChartLabels = this.viewModel.map(it => it.label);
   }
   
-  setDataToBufferForChart(operations: ViewOperation[]) {
-    this.dataBalance = [];
-    this.labelDate = [];
-    this.cashIn = [];
-    this.cashOut = [];
+  setViewModel(operations: Model[]) {
+    this.viewModel = [];
 
     operations.forEach(operation => {
-      this.dataBalance.push(operation.balance);
-      this.labelDate.push(operation.timestamp);
-      this.cashIn.push(operation.cashIn);
-      this.cashOut.push(operation.cashOut);
+      this.viewModel.push({
+        label: this.chartService.convertDateToString(
+          operation.timestamp, this.currentFilter
+        ),
+        cashIn: operation.cashIn,
+        cashOut: operation.cashOut,
+        balance: operation.balance
+      });
     });
   }
 
-  grouping(typeGrouping: string) {
-    switch(typeGrouping) {
-      case FilterTypes.day.name: {
-        this.currentFilter = FilterTypes.day;
+  grouping(typeFilter: string) {
+    switch(typeFilter) {
+      case 'day': {
+        this.currentFilter = new FilterDay();
         this.refreshDataInChart(this.currentFilter);
         break;
       }
-      case FilterTypes.month.name: {
-        this.currentFilter = FilterTypes.month;
+      case 'month': {
+        this.currentFilter = new FilterMonth();
         this.refreshDataInChart(this.currentFilter);
         break;
       }
-      case FilterTypes.year.name: {
-        this.currentFilter = FilterTypes.year;
+      case 'year': {
+        this.currentFilter = new FilterYear();
         this.refreshDataInChart(this.currentFilter);
         break;
       }
-      case FilterTypes.noFilter.name: {
-        this.currentFilter = FilterTypes.noFilter;
+      case 'noFilter': {
+        this.currentFilter = new NoFilter();
         this.refreshDataInChart(this.currentFilter);
         break;
       }

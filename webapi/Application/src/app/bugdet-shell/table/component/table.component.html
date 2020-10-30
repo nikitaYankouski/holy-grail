@@ -1,6 +1,7 @@
 <div class="content">
-	<table mat-table [dataSource]="dataSource" matSort matSortDisableClear (matSortChange)="clickSort()" 
+	<table mat-table [dataSource]="dataSource" matSort matSortDisableClear (matSortChange)="sortData()" 
 		cdkDropList (cdkDropListDropped)="onDrop($event)" class="table">
+
 		<ng-container matColumnDef="description">
 		  <th mat-header-cell *matHeaderCellDef> Description </th>
 		  <td mat-cell *matCellDef="let element" class="col-md"> {{element.description}} </td>
@@ -8,7 +9,7 @@
 	  
 		<ng-container matColumnDef="timestamp">
 		  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-		  <td mat-cell *matCellDef="let element" class="col-sm"> {{element.timestamp}} </td>
+		  <td mat-cell *matCellDef="let element" class="col-sm"> {{this.datePipe.transform(element.timestamp, 'yyyy-MM-dd')}} </td>
 		</ng-container>
 	  
 		<ng-container matColumnDef="cashIn">
@@ -38,9 +39,10 @@
 	  
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		<tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag cdkDragLockAxis="y"></tr>
+
 	</table>
 </div>
-<ng-template #dragHandleTmpl>
+<ng-template #dragHandleTmpl> <!-- !!! -->
 	<svg class="bi bi-list handle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
 		xmlns="http://www.w3.org/2000/svg">
 		<path fill-rule="evenodd"

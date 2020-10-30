@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ViewOperation } from './view-operation';
+import { Model } from './model';
 
 @Component({
   selector: 'app-bugdet-shell',
@@ -9,7 +9,7 @@ import { ViewOperation } from './view-operation';
 export class BugdetShellComponent implements OnInit {
   bankBuffer: number;
 
-  operationsBuffer: ViewOperation[];
+  operationsBuffer: Model[];
 
   constructor() { }
 
@@ -20,7 +20,7 @@ export class BugdetShellComponent implements OnInit {
     this.bankBuffer = bank;
   }
 
-  refreshOperations(operations: ViewOperation[]) {
+  refreshOperations(operations: Model[]) {
     this.operationsBuffer = operations;
   }
 }

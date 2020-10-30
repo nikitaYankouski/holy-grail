@@ -1,26 +1,27 @@
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { ViewOperation } from '../../view-operation';
-import { Filter } from './grouping-model/filter';
-import { FilterTypes } from './grouping-model/filter-types';
+import { Model } from '../../model';
+import { Filter } from './filter/filter';
+import { NoFilter } from './filter/no-filter';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChartService {
 
-  constructor() { }
+  constructor(private datePipe: DatePipe) { }
   
-  grouping(operations: ViewOperation[], filter: Filter): ViewOperation[] {
-    if (filter === FilterTypes.noFilter) {
+  // rewrite 
+  grouping(operations: Model[], filter: Filter): Model[] {
+    if (filter instanceof NoFilter) {
       return operations;
     }
-
+    
     operations.forEach((parentOperation, index) => {
-      let stringFilter = parentOperation.timestamp.substr(filter.from, filter.length);
-      parentOperation.timestamp = stringFilter;
+      parentOperation.timestamp = filter.filter(parentOperation.timestamp);
 
-      for(let nextIndex = ++index; nextIndex < operations.length;) {
-        if (stringFilter === operations[nextIndex].timestamp.substr(filter.from, filter.length)) {
+      for (let nextIndex = ++index; nextIndex < operations.length;) {
+        if (parentOperation.timestamp.getTime() === filter.filter(operations[nextIndex].timestamp).getTime()) {
           parentOperation = this.calculating(parentOperation, operations[nextIndex]);
           operations.splice(nextIndex, 1);
         }
@@ -32,8 +33,12 @@ export class ChartService {
     return operations;
   }
 
-  private calculating(parentOperation: ViewOperation,
-     nextOperation: ViewOperation): ViewOperation {
+  convertDateToString(date: Date, filter: Filter): string {
+    return this.datePipe.transform(date, filter.format);
+  }
+
+  private calculating(parentOperation: Model,
+     nextOperation: Model): Model {
 
       parentOperation.cashIn = this.toZero(parentOperation.cashIn);
       parentOperation.cashOut = this.toZero(parentOperation.cashOut);

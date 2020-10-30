@@ -14,6 +14,8 @@ import { InputComponent } from './bugdet-shell/input/input.component';
 import { TableComponent } from './bugdet-shell/table/component/table.component';
 import { ChartComponent } from './bugdet-shell/chart/component/chart.component';
 
+import { DatePipe } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +32,7 @@ import { ChartComponent } from './bugdet-shell/chart/component/chart.component';
     ChartsModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

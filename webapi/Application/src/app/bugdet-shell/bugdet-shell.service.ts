@@ -2,10 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { of, Observable } from "rxjs";
-import { catchError, debounceTime, map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
-import { BaseOperation } from './base-operation';
-import { ViewOperation } from './view-operation';
+import { DBModel } from './db-model';
+import { Model } from './model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,16 +21,16 @@ export class BugdetShellService {
     this.myAppUrl = environment.appUrl;
   }
 
-  getOperations(): Observable<ViewOperation[]> {
-    return this.http.get<BaseOperation[]>(this.myAppUrl)
+  getOperations(): Observable<Model[]> {
+    return this.http.get<DBModel[]>(this.myAppUrl)
     .pipe(
-      map((operations: BaseOperation[]) => 
+      map((operations: DBModel[]) => 
         operations.map(operation => this.casting(operation))),
       catchError(this.handleError<any>('getOperations'))
     );
   }
 
-  balanceСalculation(operations: ViewOperation[], bank: number): ViewOperation[] {
+  balanceСalculation(operations: Model[], bank: number): Model[] {
     operations.forEach(operation => {
       operation.cashIn = this.toZero(operation.cashIn);
       operation.cashOut = this.toZero(operation.cashOut);
@@ -49,7 +49,13 @@ export class BugdetShellService {
     return operations;
   }
 
-  castNewObject(operations: ViewOperation[]): ViewOperation[] { // slice
+  sortByDate(models: Model[]): Model[] {
+    return models.slice().sort((a: Model, b: Model) => {
+      return a.timestamp.getTime() - b.timestamp.getTime();
+    });
+  }
+
+  castNewObject(operations: Model[]): Model[] { // slice
     let passToChart = [];
       operations.forEach(operation => {
         passToChart.push({
@@ -80,12 +86,12 @@ export class BugdetShellService {
     };
   }
 
-  private casting(operation: BaseOperation) : ViewOperation {
-    let model: ViewOperation = {
+  private casting(operation: DBModel) : Model {
+    let model: Model = {
       id: operation.id,
       budgetId: operation.budgetId,
       description: operation.description,
-      timestamp: operation.timestamp.substr(0,10),
+      timestamp: new Date(operation.timestamp.substr(0,10)),
       cashIn: operation.isIncome ? operation.amountOfMoney : undefined,
       cashOut: operation.isIncome ? undefined : operation.amountOfMoney,
       balance: 0
