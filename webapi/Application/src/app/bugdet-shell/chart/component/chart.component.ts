@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
@@ -14,6 +14,9 @@ import { FilterMonth } from '../services/filter/filter-month';
 import { FilterYear } from '../services/filter/filter-year';
 import { NoFilter } from '../services/filter/no-filter';
 import { ViewModelChart } from '../view-model-chart';
+
+import { BaseChartDirective } from 'ng2-charts';
+import { TickModel } from '../tick-model';
 
 enum DirectionsChart {
   balance = 'BALANCE',
@@ -33,7 +36,7 @@ export class ChartComponent implements OnInit {
     return this._bank;
   }
   @Input() set bank(value: number) {
-    this._bank = value;
+    this._bank = 100; // !
   }
   
   private _operations = [];
@@ -73,8 +76,7 @@ export class ChartComponent implements OnInit {
           position: 'left',
           ticks: {
             beginAtZero: true,
-            
-            callback: function(value, index, values) {
+            callback: (value, index, values) => {
               return value + ' PLN';
             }
           },
@@ -87,13 +89,12 @@ export class ChartComponent implements OnInit {
           },
           ticks: {
             beginAtZero: true,
-            callback: function(value, index, values) {
+            callback: (value, index, values) => {
               return value + ' PLN';
             }
           }
         }
       ],
-      
     },
     plugins: {
       datalabels: {
@@ -126,6 +127,8 @@ export class ChartComponent implements OnInit {
   
   currentFilter: Filter = new NoFilter();
 
+  @ViewChild(BaseChartDirective) private _chart;
+
   constructor(
     private chartService: ChartService,
     private budgetApi: BugdetShellService
@@ -143,8 +146,34 @@ export class ChartComponent implements OnInit {
       this.budgetApi.balanceСalculation(this.operationsGroped, this.bank);
 
       this.setViewModel(this.operationsGroped);
+      
       this.setDataInChart();
+
+      this.chartRefresh();
     }
+  }
+
+  chartRefresh() {
+    this.setTicksToScales(
+      this.chartService.scalesCalculation(this.viewModel)
+    );
+
+    setTimeout(() => {
+      this._chart.refresh();
+    }, 0);
+  }
+
+  setTicksToScales(ticks: TickModel) {
+    this.barChartOptions.scales.yAxes.forEach(it => {
+      if (it.id === 'y-axis-0') {
+        it.ticks.max = ticks.leftMax;
+        it.ticks.min = ticks.leftMin;
+      }
+      if (it.id === 'y-axis-1') {
+        it.ticks.max = ticks.rightMax
+        it.ticks.min = ticks.rightMin;
+      }
+    });
   }
 
   setDataInChart() {

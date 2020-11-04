@@ -557,3 +557,4 @@ testem.log
 Thumbs.db
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,aspnetcore,visualstudio
+/webapi/Application/.vscode/launch.json

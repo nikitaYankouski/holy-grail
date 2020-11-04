@@ -22,7 +22,7 @@ export class TableComponent implements OnInit {
     return this._bank;
   }
   @Input() set bank(value: number) {
-    this._bank = value;
+    this._bank = 100; // !
     this.inputBank();
   }
 
