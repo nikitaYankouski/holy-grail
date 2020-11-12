@@ -6,6 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [],
@@ -15,7 +17,9 @@ import { MatSortModule } from '@angular/material/sort';
     MatInputModule,
     MatButtonModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule, 
+    MatDatepickerModule,
+    MatFormFieldModule
   ],
   exports: [
     CommonModule,
@@ -23,7 +27,9 @@ import { MatSortModule } from '@angular/material/sort';
     MatInputModule,
     MatButtonModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule, 
+    MatDatepickerModule,
+    MatFormFieldModule
   ]
 })
 export class MaterialModule { }

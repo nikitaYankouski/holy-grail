@@ -15,6 +15,8 @@ import { TableComponent } from './bugdet-shell/table/component/table.component';
 import { ChartComponent } from './bugdet-shell/chart/component/chart.component';
 
 import { DatePipe } from '@angular/common';
+import { FilterPanelComponent } from './bugdet-shell/filter-panel/filter-panel.component';
+//import { DatepickerComponent } from './bugdet-shell/filter-panel/datepicker/datepicker.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { DatePipe } from '@angular/common';
     TableComponent,
     InputComponent,
     BugdetShellComponent,
-    ChartComponent
+    ChartComponent,
+    FilterPanelComponent
+    // DatepickerComponent
   ],
   imports: [
     BrowserModule,

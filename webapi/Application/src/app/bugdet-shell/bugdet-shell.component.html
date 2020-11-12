@@ -1,3 +1,4 @@
+<app-filter-panel></app-filter-panel>
 <app-chart [bank]="bankBuffer" [operations]="operationsBuffer"></app-chart>
 <app-input (enteringBank)="refreshBankBuffer($event)"></app-input>
 <app-table [bank]="bankBuffer" (operationsChart)="refreshOperations($event)"></app-table>
