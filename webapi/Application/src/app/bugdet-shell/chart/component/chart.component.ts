@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 
-import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { ChartDataSets, ChartOptions, ChartType, ChartYAxe } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
@@ -21,7 +21,7 @@ import { TickModel } from '../tick-model';
 enum DirectionsChart {
   balance = 'BALANCE',
   cashIn = 'CASH IN',
-  cashOut = 'CASH OUT'    
+  cashOut = 'CASH OUT'
 }
 
 @Component({
@@ -32,14 +32,16 @@ enum DirectionsChart {
 })
 export class ChartComponent implements OnInit {
   private _bank: number;
+
   get bank(): number {
     return this._bank;
   }
   @Input() set bank(value: number) {
     this._bank = 100; // !
   }
-  
-  private _operations = [];
+
+  private _operations: Model[];
+
   get operations(): Model[] {
     return this._operations;
   }
@@ -47,26 +49,27 @@ export class ChartComponent implements OnInit {
     this._operations = value;
     this.refreshDataInChart(this.currentFilter);
   }
-  
+
   private _operationsGroped = [];
+
   get operationsGroped(): Model[] {
     return this._operationsGroped;
   }
   set operationsGroped(value: Model[]) {
     this._operationsGroped = value;
   }
-  
+
   viewModel: ViewModelChart[];
 
 
   barChartLabels: Label[] = [];
-  
+
   barChartPlugins = [pluginDataLabels];
-  
+
   barChartType: ChartType = 'bar';
-  
+
   barChartLegend = true;
-  
+
   barChartOptions: ChartOptions = {
     responsive: true,
     scales: {
@@ -79,7 +82,7 @@ export class ChartComponent implements OnInit {
             callback: (value, index, values) => {
               return value + ' PLN';
             }
-          },
+          }
         },
         {
           id: 'y-axis-1',
@@ -102,9 +105,9 @@ export class ChartComponent implements OnInit {
       }
     }
   };
-  
+
   barChartData: ChartDataSets[] = [
-    { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1', fill: false},
+    { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1', fill: false, lineTension: 0 },
     { data: [], label: DirectionsChart.cashIn, yAxisID: 'y-axis-0', stack: 'a' },
     { data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'b' },
   ];
@@ -116,7 +119,7 @@ export class ChartComponent implements OnInit {
       borderColor: 'rgb(255, 217, 125)'
     },
     // cash in
-    { 
+    {
       backgroundColor: 'rgb(96, 211, 148)'
     },
     // cash out
@@ -124,7 +127,7 @@ export class ChartComponent implements OnInit {
       backgroundColor: 'rgb(255, 155, 133)'
     }
   ];
-  
+
   currentFilter: Filter = new NoFilter();
 
   @ViewChild(BaseChartDirective) private _chart;
@@ -132,12 +135,12 @@ export class ChartComponent implements OnInit {
   constructor(
     private chartService: ChartService,
     private budgetApi: BugdetShellService
-  ) {}
+  ) { }
 
   ngOnInit(): void { }
 
-  refreshDataInChart(typeFilter: Filter) {  
-    if (typeof this.operations !== 'undefined') { 
+  refreshDataInChart(typeFilter: Filter) {
+    if (typeof this.operations !== 'undefined') {
       this.operationsGroped = this.chartService.grouping(
         this.budgetApi.castNewObject(this.operations), typeFilter
       );
@@ -146,7 +149,7 @@ export class ChartComponent implements OnInit {
       this.budgetApi.balanceСalculation(this.operationsGroped, this.bank);
 
       this.setViewModel(this.operationsGroped);
-      
+
       this.setDataInChart();
 
       this.chartRefresh();
@@ -168,10 +171,12 @@ export class ChartComponent implements OnInit {
       if (it.id === 'y-axis-0') {
         it.ticks.max = ticks.leftMax;
         it.ticks.min = ticks.leftMin;
+        it.ticks.stepSize = ticks.stepSizeLeft;
       }
       if (it.id === 'y-axis-1') {
-        it.ticks.max = ticks.rightMax
+        it.ticks.max = ticks.rightMax;
         it.ticks.min = ticks.rightMin;
+        it.ticks.stepSize = ticks.stepSizeRight;
       }
     });
   }
@@ -188,7 +193,7 @@ export class ChartComponent implements OnInit {
 
     this.barChartLabels = this.viewModel.map(it => it.label);
   }
-  
+
   setViewModel(operations: Model[]) {
     this.viewModel = [];
 
@@ -204,8 +209,9 @@ export class ChartComponent implements OnInit {
     });
   }
 
+  // rewrite
   grouping(typeFilter: string) {
-    switch(typeFilter) {
+    switch (typeFilter) {
       case 'day': {
         this.currentFilter = new FilterDay();
         this.refreshDataInChart(this.currentFilter);

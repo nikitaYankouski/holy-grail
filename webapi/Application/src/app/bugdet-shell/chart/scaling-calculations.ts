@@ -1,31 +1,43 @@
+import { TickModel } from './tick-model';
+
 export class ScalingCalculations {
-    static percentageOfNumberCalculation(number: number, percent: number): number {
-        return number * (percent / 100);
-    }
 
-    static percentageCalculation(numberFrom: number, numberTo: number): number {
-        return (numberTo / numberFrom) * 100;
-    }
+  // clear code
+  static roundUpNext(scaleMax: number, scaleMin: number, type: string): TickModel {
+    const roundScales: TickModel = new TickModel();
 
-    static roundUpToNextDigit(number: number): number {
-        let numberOfDigits = (Math.log10((number ^ (number >> 31)) - (number >> 31)) | 0);
-        
-        let divider = '1';
-        for (let i = 0; i < numberOfDigits; i++) { 
-          divider += '0';
-        }
-    
-        let numberRank = 1;
-          let secondPosition = number.toString().charAt(1);
-          if (secondPosition !== "") {
-          numberRank = Number(secondPosition) >= 5 ? 0 : 1;
-        }
-    
-        let valueToReturn = (Math.round(number / Number(divider)) + numberRank).toString();
-        for (let i = 0; i < numberOfDigits; i++) { 
-          valueToReturn += '0';
-        }
-    
-        return Number(valueToReturn);
+    const scale = Math.abs(scaleMax) + Math.abs(scaleMin); 
+    const step = this.getStep(scale);
+
+    const numberStepInPositiveArea = Math.floor(Math.abs(scaleMax) / step) + 1;
+    const numberStepInNegativeArea = Math.floor(Math.abs(scaleMin) / step) + 1;
+
+    if (type === 'right') {
+      roundScales.rightMax = step * numberStepInPositiveArea;
+      roundScales.rightMin = scaleMin === 0 ? 0 : -Math.abs(step * numberStepInNegativeArea);
+      roundScales.stepSizeRight = step;
+      return roundScales;
     }
+    
+    roundScales.leftMax = step * numberStepInPositiveArea;
+    roundScales.leftMin = scaleMin === 0 ? 0 : -Math.abs(step * numberStepInNegativeArea);
+    roundScales.stepSizeLeft = step;
+    return roundScales;
+  }
+
+  private static getStep(scale: number): number {
+    const step = 7;
+    const numberDigits = Math.round(scale / step).toString().length;
+    return Number((this.getDigitFromNumber(Math.round(scale / step), 0)) + (this.concateZeros(numberDigits - 1)))
+  }
+
+  private static getDigitFromNumber(number: number, index: number): number {
+    return Number(number.toString().charAt(index));
+  }
+  
+  private static concateZeros(number: number): string {
+    let zeros: string = '';
+    for (let count = 0; count < number; count++) { zeros += '0'; }
+    return zeros;
+  }
 }

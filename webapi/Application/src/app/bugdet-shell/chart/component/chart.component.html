@@ -1,19 +1,13 @@
-<div class="container">    
-    <canvas baseChart
-        [datasets]="barChartData"
-        [labels]="barChartLabels"
-        [colors]="barChartColors"
-        [options]="barChartOptions"
-        [plugins]="barChartPlugins"
-        [legend]="barChartLegend"
-        [chartType]="barChartType">
+<div class="container">
+    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [colors]="barChartColors"
+        [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
     </canvas>
 </div>
 
 <div class="container button-row">
     <button mat-raised-button class="button" (click)="grouping('noFilter')"
         [ngClass]="{'button-selected': currentFilter.name === 'noFilter'}">No grouping</button>
-    <button mat-raised-button class="button" (click)="grouping('day')" 
+    <button mat-raised-button class="button" (click)="grouping('day')"
         [ngClass]="{'button-selected': currentFilter.name === 'day'}">Day</button>
     <button mat-raised-button class="button" (click)="grouping('month')"
         [ngClass]="{'button-selected': currentFilter.name === 'month'}">Month</button>
