@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Model } from './model';
+import { DateRange } from './date-range';
+import { BugdetShellService } from './bugdet-shell.service';
 
 @Component({
   selector: 'app-bugdet-shell',
@@ -11,9 +13,16 @@ export class BugdetShellComponent implements OnInit {
 
   operationsBuffer: Model[];
 
-  constructor() { }
+  filterDateRangeBuffer: DateRange;
 
-  ngOnInit(): void {
+  timeLimitBugdet: DateRange;
+
+  constructor(private bugdetShellService: BugdetShellService) { }
+
+  ngOnInit(): void { }
+
+  refreshFilterDateRange(filterDateRange: DateRange) {
+    this.filterDateRangeBuffer = filterDateRange;
   }
 
   refreshBankBuffer(bank: number) {
@@ -22,5 +31,6 @@ export class BugdetShellComponent implements OnInit {
 
   refreshOperations(operations: Model[]) {
     this.operationsBuffer = operations;
+    this.timeLimitBugdet = this.bugdetShellService.calculateMinMaxOperations(operations);
   }
 }

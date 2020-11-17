@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DateRange } from '../date-range';
+import { BugdetShellService } from '../bugdet-shell.service';
 
 @Component({
   selector: 'app-filter-panel',
@@ -7,9 +9,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FilterPanelComponent implements OnInit {
 
-  constructor() { }
+  private _filterDateRange: DateRange;
 
-  ngOnInit(): void {
+  get filterDateRange(): DateRange {
+    return this._filterDateRange;
+  }
+  set filterDateRange(value: DateRange) {
+    this._filterDateRange = value;
+    this.enteringFilterDateRange.emit(this._filterDateRange);
+  }
+
+  private _minMaxDatepicker: DateRange;
+  get minMaxDatepicker(): DateRange {
+    return this._minMaxDatepicker;
+  }
+  @Input() set minMaxDatepicker(value: DateRange) {
+    this._minMaxDatepicker = value;
+  }
+
+  @Output() enteringFilterDateRange = new EventEmitter<DateRange>();
+
+  constructor(private budgetApi: BugdetShellService) { }
+
+  ngOnInit(): void { }
+
+  passFilterDateRange(dateRange: DateRange) {
+    this.filterDateRange = dateRange;
   }
 
 }

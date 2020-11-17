@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { DBModel } from './db-model';
 import { Model } from './model';
+import { DateRange } from './date-range';
 
 @Injectable({
   providedIn: 'root'
@@ -24,10 +25,19 @@ export class BugdetShellService {
   getOperations(): Observable<Model[]> {
     return this.http.get<DBModel[]>(this.myAppUrl)
     .pipe(
-      map((operations: DBModel[]) => 
-        operations.map(operation => this.casting(operation))),
+      map((operations: DBModel[]) =>
+        operations.map(operation => this.casting(operation))
+      ),
       catchError(this.handleError<any>('getOperations'))
     );
+  }
+
+  calculateMinMaxOperations(operations: Model[]): DateRange {
+    const sortedOperations = this.sortByDate(operations);
+    return {
+      startDate: sortedOperations[0].timestamp,
+      endDate: sortedOperations[sortedOperations.length - 1].timestamp
+    }
   }
 
   balanceСalculation(operations: Model[], bank: number): Model[] {
@@ -37,8 +47,8 @@ export class BugdetShellService {
     });
 
     operations.forEach((operation, index) => {
-      operation.balance = index !== 0 ? 
-        operations[index - 1].balance + operation.cashIn - operation.cashOut : 
+      operation.balance = index !== 0 ?
+        operations[index - 1].balance + operation.cashIn - operation.cashOut :
         bank + operation.cashIn - operation.cashOut;
     });
 

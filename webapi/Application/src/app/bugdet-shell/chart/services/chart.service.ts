@@ -6,6 +6,7 @@ import { TickModel } from '../tick-model';
 import { ViewModelChart } from '../view-model-chart';
 import { Filter } from './filter/filter';
 import { NoFilter } from './filter/no-filter';
+import {DateRange} from '../../date-range';
 
 const _step: number = 10;
 
@@ -16,7 +17,7 @@ export class ChartService {
 
   constructor(private datePipe: DatePipe) { }
 
-  // last 'if' -> exception 
+  // last 'if' -> exception
   scalesCalculation(viewModel: ViewModelChart[]): TickModel {
     const maxCashIn = Math.max(...viewModel.filter(model => typeof model.cashIn !== 'undefined').map(model => model.cashIn));
     const maxCashOut = Math.max(...viewModel.filter(model => typeof model.cashOut !== 'undefined').map(model => model.cashOut));
@@ -44,7 +45,7 @@ export class ChartService {
     return chartScales;
   }
 
-  // rewrite 
+  // rewrite
   grouping(operations: Model[], filter: Filter): Model[] {
     if (filter instanceof NoFilter) {
       return operations;
@@ -64,6 +65,11 @@ export class ChartService {
       }
     });
     return operations;
+  }
+
+  filterByDate(operations: Model[], filter: DateRange): Model[] {
+    return operations.filter(operation =>
+      operation.timestamp >= filter.startDate && operation.timestamp <= filter.endDate);
   }
 
   convertDateToString(date: Date, filter: Filter): string {

@@ -17,6 +17,7 @@ import { ViewModelChart } from '../view-model-chart';
 
 import { BaseChartDirective } from 'ng2-charts';
 import { TickModel } from '../tick-model';
+import {DateRange} from '../../date-range';
 
 enum DirectionsChart {
   balance = 'BALANCE',
@@ -38,6 +39,16 @@ export class ChartComponent implements OnInit {
   }
   @Input() set bank(value: number) {
     this._bank = 100; // !
+  }
+
+  private _filterDateRange: DateRange;
+
+  get filterDateRange(): DateRange {
+    return  this._filterDateRange;
+  }
+  @Input() set filterDateRange(value: DateRange) {
+    this._filterDateRange = value;
+    this.refreshDataInChart(this.currentFilter);
   }
 
   private _operations: Model[];
@@ -148,11 +159,16 @@ export class ChartComponent implements OnInit {
 
       this.budgetApi.balanceСalculation(this.operationsGroped, this.bank);
 
-      this.setViewModel(this.operationsGroped);
+      if (typeof this.filterDateRange !== 'undefined') {
+        this.operationsGroped = this.chartService
+          .filterByDate(this.operationsGroped, this.filterDateRange);
+      }
+
+      this.castToView(this.operationsGroped);
 
       this.setDataInChart();
 
-      this.chartRefresh();
+      this.chartRefresh(); // it's possible not to update the chart when filtering
     }
   }
 
@@ -194,7 +210,7 @@ export class ChartComponent implements OnInit {
     this.barChartLabels = this.viewModel.map(it => it.label);
   }
 
-  setViewModel(operations: Model[]) {
+  castToView(operations: Model[]) {
     this.viewModel = [];
 
     operations.forEach(operation => {

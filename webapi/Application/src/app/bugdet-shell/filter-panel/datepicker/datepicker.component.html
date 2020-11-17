@@ -1,10 +1,32 @@
-<mat-form-field appearance="fill">
-    <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [rangePicker]="picker">
-      <input matStartDate placeholder="Start date">
-      <input matEndDate placeholder="End date">
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-</mat-form-field>
-  
+<div class="filter-panel">
+  <div class="content">
+    <input type="text"
+           ngxDaterangepickerMd
+           [(ngModel)]="selectedRangeNgx"
+           placeholder=""
+           (change)="inputDateNgx($event)"
+           [minDate]="minDate"
+           [maxDate]="maxDate"  autocomplete="off" drops="down" opens="right" class="input">
+  </div>
+
+
+    <mat-form-field class="content" appearance="outline">
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [formGroup]="selectedRangeAng" [rangePicker]="picker">
+        <input [min]="minDate" matStartDate formControlName="start" placeholder="Start date">
+        <input [max]="maxDate" matEndDate formControlName="end" placeholder="End date">
+      </mat-date-range-input>
+
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+      <mat-error *ngIf="selectedRangeAng.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+      <mat-error *ngIf="selectedRangeAng.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+    </mat-form-field>
+<!--  <button mat-raised-button (click)="inputDateAng($event)">Done</button>-->
+
+
+  <div class="content">
+    <button mat-raised-button (click)="inputDateAng($event)">Done</button>
+  </div>
+</div>
+
