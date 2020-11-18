@@ -91,7 +91,7 @@ export class ChartComponent implements OnInit {
           ticks: {
             beginAtZero: true,
             callback: (value, index, values) => {
-              return value + ' PLN';
+              return this.chartService.numberFormat(Number(value));;
             }
           }
         },
@@ -104,7 +104,7 @@ export class ChartComponent implements OnInit {
           ticks: {
             beginAtZero: true,
             callback: (value, index, values) => {
-              return value + ' PLN';
+              return this.chartService.numberFormat(Number(value));;
             }
           }
         }
@@ -164,7 +164,7 @@ export class ChartComponent implements OnInit {
           .filterByDate(this.operationsGroped, this.filterDateRange);
       }
 
-      this.castToView(this.operationsGroped);
+      this.viewModel = this.chartService.castToView(this.operationsGroped, this.currentFilter);
 
       this.setDataInChart();
 
@@ -208,21 +208,6 @@ export class ChartComponent implements OnInit {
       .data = this.viewModel.map(it => it.cashOut);
 
     this.barChartLabels = this.viewModel.map(it => it.label);
-  }
-
-  castToView(operations: Model[]) {
-    this.viewModel = [];
-
-    operations.forEach(operation => {
-      this.viewModel.push({
-        label: this.chartService.convertDateToString(
-          operation.timestamp, this.currentFilter
-        ),
-        cashIn: operation.cashIn,
-        cashOut: operation.cashOut,
-        balance: operation.balance
-      });
-    });
   }
 
   // rewrite

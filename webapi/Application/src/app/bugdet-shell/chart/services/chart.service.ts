@@ -19,8 +19,10 @@ export class ChartService {
 
   // last 'if' -> exception
   scalesCalculation(viewModel: ViewModelChart[]): TickModel {
-    const maxCashIn = Math.max(...viewModel.filter(model => typeof model.cashIn !== 'undefined').map(model => model.cashIn));
-    const maxCashOut = Math.max(...viewModel.filter(model => typeof model.cashOut !== 'undefined').map(model => model.cashOut));
+    const maxCashIn = Math.max(...viewModel.filter(model => typeof model.cashIn !== 'undefined')
+      .map(model => model.cashIn));
+    const maxCashOut = Math.max(...viewModel.filter(model => typeof model.cashOut !== 'undefined')
+      .map(model => model.cashOut));
 
     const maxBalance = Math.max(...viewModel.map(model => model.balance));
     const minBalance = Math.min(...viewModel.map(model => model.balance));
@@ -74,6 +76,28 @@ export class ChartService {
 
   convertDateToString(date: Date, filter: Filter): string {
     return this.datePipe.transform(date, filter.format);
+  }
+
+  castToView(operations: Model[], filter: Filter): ViewModelChart[] {
+    return operations.map(operation => {
+        return {
+          label: this.convertDateToString(operation.timestamp, filter),
+          cashIn: typeof operation.cashIn !== 'undefined' ?
+            operation.cashIn : undefined,
+          cashOut: typeof operation.cashOut !== 'undefined' ?
+            operation.cashOut : undefined,
+          balance: typeof operation.balance !== 'undefined' ?
+            operation.balance : undefined
+        }
+    });
+  }
+
+  numberFormat(value: number): string {
+    return Intl.NumberFormat('pl', {
+      style: 'currency',
+      minimumIntegerDigits: 1,
+      currency: 'PLN' }
+    ).format(value);
   }
 
   private calculating(parentOperation: Model,

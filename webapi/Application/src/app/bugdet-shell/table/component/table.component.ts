@@ -35,8 +35,8 @@ export class TableComponent implements OnInit {
     this._operations = value;
   }
 
-  dataSource = new MatTableDataSource<Model>();
-  
+  dataSource = new MatTableDataSource<ViewModelTable>();
+
   @Output() operationsChart = new EventEmitter<Model[]>();
 
   @ViewChild(MatSort) sort: MatSort;
@@ -50,7 +50,7 @@ export class TableComponent implements OnInit {
   ]
 
   constructor(
-    private service: TableService,
+    private tableService: TableService,
     private budgetApi: BugdetShellService,
     public datePipe: DatePipe
   ) { }
@@ -65,14 +65,17 @@ export class TableComponent implements OnInit {
   }
 
   sortData() {
+
     this.dataSource.sort = this.sort;
 
     this.dataSource.connect().subscribe(elements => {
-      this.operations = elements
+      console.log(elements);
+      this.operations = this.tableService.castToOperations(elements);
+      console.log(this.operations);
     });
-    
+
     this.balanceСalculation(this.operations);
-    this.dataSource.data = this.operations; 
+    this.dataSource.data = this.tableService.castToViewModel(this.operations);
   }
 
   balanceСalculation(asynOperationsTable: Model[]): Model[] {
@@ -88,14 +91,14 @@ export class TableComponent implements OnInit {
     });
 
     if (event.currentIndex !== event.previousIndex) {
-      this.service.timeChange(this.operations, event.currentIndex);
+      this.tableService.timeChange(this.operations, event.currentIndex);
       this.refreshData();
     }
   }
 
   refreshData() {
     this.balanceСalculation(this.operations);
-    this.dataSource.data = this.operations; 
+    this.dataSource.data = this.tableService.castToViewModel(this.operations);
     this.operationsChart.emit([...this.budgetApi.castNewObject(this.operations)]);
   }
 
