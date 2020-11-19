@@ -131,11 +131,11 @@ export class ChartComponent implements OnInit {
     },
     // cash in
     {
-      backgroundColor: 'rgb(96, 211, 148)'
+      backgroundColor: 'rgb(20, 140, 58)'
     },
     // cash out
     {
-      backgroundColor: 'rgb(255, 155, 133)'
+      backgroundColor: 'rgb(235, 45, 45)'
     }
   ];
 
