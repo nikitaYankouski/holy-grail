@@ -6,7 +6,7 @@ export class ScalingCalculations {
   static roundUpNext(scaleMax: number, scaleMin: number, type: string): TickModel {
     const roundScales: TickModel = new TickModel();
 
-    const scale = Math.abs(scaleMax) + Math.abs(scaleMin); 
+    const scale = Math.abs(scaleMax) + Math.abs(scaleMin);
     const step = this.getStep(scale);
 
     const numberStepInPositiveArea = Math.floor(Math.abs(scaleMax) / step) + 1;
@@ -18,7 +18,7 @@ export class ScalingCalculations {
       roundScales.stepSizeRight = step;
       return roundScales;
     }
-    
+
     roundScales.leftMax = step * numberStepInPositiveArea;
     roundScales.leftMin = scaleMin === 0 ? 0 : -Math.abs(step * numberStepInNegativeArea);
     roundScales.stepSizeLeft = step;
@@ -28,13 +28,14 @@ export class ScalingCalculations {
   private static getStep(scale: number): number {
     const step = 7;
     const numberDigits = Math.round(scale / step).toString().length;
-    return Number((this.getDigitFromNumber(Math.round(scale / step), 0)) + (this.concateZeros(numberDigits - 1)))
+    return Number((this.getDigitFromNumber(Math.round(scale / step), 0)) +
+      (this.concateZeros(numberDigits - 1)));
   }
 
   private static getDigitFromNumber(number: number, index: number): number {
     return Number(number.toString().charAt(index));
   }
-  
+
   private static concateZeros(number: number): string {
     let zeros: string = '';
     for (let count = 0; count < number; count++) { zeros += '0'; }

@@ -1,0 +1,8 @@
+<app-filter-panel (enteringFilterDateRange)="refreshFilterDateRange($event)"
+                  [minMaxDatepicker]="timeLimitBugdet"></app-filter-panel>
+
+<app-chart [operations]="operationsBuffer"
+           [bank]="enteringBank"
+           [filterDateRange]="filterDateRangeBuffer"></app-chart>
+
+<app-table [bank]="enteringBank" (operationsChart)="refreshOperations($event)"></app-table>

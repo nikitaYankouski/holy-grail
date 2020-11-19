@@ -1,0 +1,29 @@
+ .filter-panel {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   justify-content: flex-start;
+   align-items: stretch;
+   align-content: stretch;
+   padding-top: 1%;
+ }
+
+ .input {
+   line-height: 42px;
+ }
+
+ .datepickerAng {
+   display: flex;
+   justify-content: space-between;
+ }
+
+ .datepickerNgx {
+  padding: 5px 20px 20px 20px;
+ }
+
+ .button {
+   padding: 10px;
+ }
+
+
+

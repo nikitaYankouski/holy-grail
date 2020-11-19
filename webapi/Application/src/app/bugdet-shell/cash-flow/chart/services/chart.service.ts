@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { Model } from '../../model';
+import { Model } from '../../../model';
 import { ScalingCalculations } from '../scaling-calculations';
 import { TickModel } from '../tick-model';
 import { ViewModelChart } from '../view-model-chart';
@@ -17,7 +17,6 @@ export class ChartService {
 
   constructor(private datePipe: DatePipe) { }
 
-  // last 'if' -> exception
   scalesCalculation(viewModel: ViewModelChart[]): TickModel {
     const maxCashIn = Math.max(...viewModel.filter(model => typeof model.cashIn !== 'undefined')
       .map(model => model.cashIn));
@@ -41,9 +40,6 @@ export class ChartService {
     chartScales.leftMin = buf.leftMin;
     chartScales.stepSizeLeft = buf.stepSizeLeft;
 
-    if ((Math.abs(chartScales.rightMin) / chartScales.rightMax) > 2) {
-      chartScales.leftMin = Math.round(chartScales.leftMax * chartScales.rightMin) / chartScales.rightMax;
-    }
     return chartScales;
   }
 

@@ -1,0 +1,43 @@
+.input-form {
+  min-width: 150px;
+  max-width: 550px;
+  width: 100%;
+}
+
+.input-full-width {
+  width: 281%;
+}
+
+.container {
+  width: 30%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  padding-top: 30px;
+}
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: stretch;
+}
+
+.label-bank {
+  font-family: sans-serif;
+  font-size: 20px;
+  padding-top: 22px;
+  padding-right: 30px;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+}

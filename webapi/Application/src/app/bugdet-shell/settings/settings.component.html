@@ -1,0 +1,23 @@
+<div class="settings-container">
+  <div class="container">
+    <div class="label-bank">
+      <span>Bank </span>
+    </div>
+    <div>
+      <form class="input-form">
+        <mat-form-field class="input-full-width">
+          <mat-label></mat-label>
+          <input matInput #inputBank (keyup)="passingBank(inputBank.value)" autocomplete="off">
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+
+  <div class="container button">
+    <button mat-stroked-button>
+      <a [routerLink]="['/cash-flow', inputBank.value]" routerLinkActive="active" class="link">
+        Done
+      </a>
+    </button>
+  </div>
+</div>

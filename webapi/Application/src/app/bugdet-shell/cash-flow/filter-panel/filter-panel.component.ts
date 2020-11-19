@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DateRange } from '../date-range';
-import { BugdetShellService } from '../bugdet-shell.service';
 
 @Component({
   selector: 'app-filter-panel',
@@ -29,7 +28,7 @@ export class FilterPanelComponent implements OnInit {
 
   @Output() enteringFilterDateRange = new EventEmitter<DateRange>();
 
-  constructor(private budgetApi: BugdetShellService) { }
+  constructor() { }
 
   ngOnInit(): void { }
 

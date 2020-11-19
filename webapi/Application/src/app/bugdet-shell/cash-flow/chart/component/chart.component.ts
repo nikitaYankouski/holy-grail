@@ -5,8 +5,7 @@ import { Color, Label } from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
 import { ChartService } from '../services/chart.service';
-import { Model } from '../../model';
-import { BugdetShellService } from '../../bugdet-shell.service';
+import { Model } from '../../../model';
 
 import { Filter } from '../services/filter/filter';
 import { FilterDay } from '../services/filter/filter-day';
@@ -18,6 +17,7 @@ import { ViewModelChart } from '../view-model-chart';
 import { BaseChartDirective } from 'ng2-charts';
 import { TickModel } from '../tick-model';
 import {DateRange} from '../../date-range';
+import {CashFlowService} from '../../cash-flow.service';
 
 enum DirectionsChart {
   balance = 'BALANCE',
@@ -32,13 +32,13 @@ enum DirectionsChart {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartComponent implements OnInit {
-  private _bank: number;
+  private _bank: number = 100;
 
   get bank(): number {
     return this._bank;
   }
   @Input() set bank(value: number) {
-    this._bank = 100; // !
+    this._bank = value;
   }
 
   private _filterDateRange: DateRange;
@@ -145,19 +145,20 @@ export class ChartComponent implements OnInit {
 
   constructor(
     private chartService: ChartService,
-    private budgetApi: BugdetShellService
+    private cashFlowService: CashFlowService
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+  }
 
   refreshDataInChart(typeFilter: Filter) {
     if (typeof this.operations !== 'undefined') {
       this.operationsGroped = this.chartService.grouping(
-        this.budgetApi.castNewObject(this.operations), typeFilter
+        this.cashFlowService.castNewObject(this.operations), typeFilter
       );
-      this.operationsGroped = this.budgetApi.sortByDate(this.operationsGroped);
+      this.operationsGroped = this.cashFlowService.sortByDate(this.operationsGroped);
 
-      this.budgetApi.balanceСalculation(this.operationsGroped, this.bank);
+      this.cashFlowService.balanceСalculation(this.operationsGroped, this.bank);
 
       if (typeof this.filterDateRange !== 'undefined') {
         this.operationsGroped = this.chartService
@@ -183,6 +184,7 @@ export class ChartComponent implements OnInit {
   }
 
   setTicksToScales(ticks: TickModel) {
+    console.log(ticks);
     this.barChartOptions.scales.yAxes.forEach(it => {
       if (it.id === 'y-axis-0') {
         it.ticks.max = ticks.leftMax;

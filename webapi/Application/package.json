@@ -25,6 +25,7 @@
     "chartjs-plugin-datalabels": "^0.7.0",
     "moment": "^2.29.1",
     "ng2-charts": "^2.4.2",
+    "ngx-cookie-service": "^10.1.1",
     "ngx-daterangepicker-material": "^4.0.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

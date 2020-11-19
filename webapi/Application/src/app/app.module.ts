@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { CookieService } from 'ngx-cookie-service';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,25 +12,28 @@ import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import { BugdetShellComponent } from './bugdet-shell/bugdet-shell.component';
-import { InputComponent } from './bugdet-shell/input/input.component';
-import { TableComponent } from './bugdet-shell/table/component/table.component';
+import { TableComponent } from './bugdet-shell/cash-flow/table/component/table.component';
 
-import { ChartComponent } from './bugdet-shell/chart/component/chart.component';
-import { FilterPanelComponent } from './bugdet-shell/filter-panel/filter-panel.component';
-import { DatepickerComponent } from './bugdet-shell/filter-panel/datepicker/datepicker.component';
+import { ChartComponent } from './bugdet-shell/cash-flow/chart/component/chart.component';
+import { FilterPanelComponent } from './bugdet-shell/cash-flow/filter-panel/filter-panel.component';
+import { DatepickerComponent } from './bugdet-shell/cash-flow/filter-panel/datepicker/datepicker.component';
 
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
-
+import { HeadPanelComponent } from './bugdet-shell/head-panel/head-panel.component';
+import { SettingsComponent } from './bugdet-shell/settings/settings.component';
+import { CashFlowComponent } from './bugdet-shell/cash-flow/cash-flow.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TableComponent,
-    InputComponent,
     BugdetShellComponent,
     ChartComponent,
     FilterPanelComponent,
-    DatepickerComponent
+    DatepickerComponent,
+    HeadPanelComponent,
+    SettingsComponent,
+    CashFlowComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +46,10 @@ import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
     NgxDaterangepickerMd.forRoot(),
     ReactiveFormsModule
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    CookieService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

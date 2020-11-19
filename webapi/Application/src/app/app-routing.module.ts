@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BugdetShellComponent } from './bugdet-shell/bugdet-shell.component';
+import { CashFlowComponent } from './bugdet-shell/cash-flow/cash-flow.component';
+import { SettingsComponent } from './bugdet-shell/settings/settings.component';
 
 const routes: Routes = [
-  { path: 'budget', component: BugdetShellComponent, pathMatch: 'full' },
-  { path: '**', redirectTo: '/budget' }
+  { path: 'cash-flow/:bank', component: CashFlowComponent },
+  { path: 'settings', component: SettingsComponent },
+  { path: '', redirectTo: '/cash-flow/0', pathMatch: 'full' }, // add cookie
 ];
 
 @NgModule({

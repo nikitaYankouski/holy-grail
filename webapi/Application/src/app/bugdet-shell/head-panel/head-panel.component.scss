@@ -1,0 +1,17 @@
+ .head-content {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: nowrap;
+   justify-content: flex-end;
+   align-items: stretch;
+   align-content: stretch;
+ }
+
+ .icon {
+   padding-top: 50%;
+   color: black;
+ }
+
+ .spacer {
+   flex: 1 1 auto;
+ }

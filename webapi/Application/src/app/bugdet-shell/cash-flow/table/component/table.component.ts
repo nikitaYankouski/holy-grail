@@ -1,14 +1,15 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from "@angular/core";
 import { moveItemInArray, CdkDragDrop } from "@angular/cdk/drag-drop";
 
-import { BugdetShellService } from '../../bugdet-shell.service';
+import { BugdetShellService } from '../../../bugdet-shell.service';
 import { TableService } from '../services/table.service';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Model } from '../../model';
+import { Model } from '../../../model';
 import { ViewModelTable } from '../view-model-table';
 import { DatePipe } from '@angular/common';
+import {CashFlowService} from '../../cash-flow.service';
 
 @Component({
   selector: 'app-table',
@@ -16,13 +17,13 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent implements OnInit {
-  private _bank: number;
+  private _bank: number = 100;
 
   get bank(): number {
     return this._bank;
   }
   @Input() set bank(value: number) {
-    this._bank = 100; // !
+    this._bank = value;
     this.inputBank();
   }
 
@@ -51,27 +52,26 @@ export class TableComponent implements OnInit {
 
   constructor(
     private tableService: TableService,
-    private budgetApi: BugdetShellService,
+    private cashFlowService: CashFlowService,
     public datePipe: DatePipe
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    // this.inputBank();
+  }
 
   getOperations() {
-    this.budgetApi.getOperations().subscribe(operations => {
+    this.cashFlowService.getOperations();
+    this.cashFlowService.dataString.subscribe(operations => {
       this.operations = operations;
       this.refreshData();
     });
   }
 
   sortData() {
-
     this.dataSource.sort = this.sort;
-
     this.dataSource.connect().subscribe(elements => {
-      console.log(elements);
       this.operations = this.tableService.castToOperations(elements);
-      console.log(this.operations);
     });
 
     this.balanceСalculation(this.operations);
@@ -80,7 +80,7 @@ export class TableComponent implements OnInit {
 
   balanceСalculation(asynOperationsTable: Model[]): Model[] {
     if ((typeof this.bank !== 'undefined') && (typeof this.bank !== "string")) {
-      return this.budgetApi.balanceСalculation(asynOperationsTable, this.bank);
+      return this.cashFlowService.balanceСalculation(asynOperationsTable, this.bank);
     }
   }
 
@@ -99,7 +99,7 @@ export class TableComponent implements OnInit {
   refreshData() {
     this.balanceСalculation(this.operations);
     this.dataSource.data = this.tableService.castToViewModel(this.operations);
-    this.operationsChart.emit([...this.budgetApi.castNewObject(this.operations)]);
+    this.operationsChart.emit([...this.cashFlowService.castNewObject(this.operations)]);
   }
 
   inputBank() {
