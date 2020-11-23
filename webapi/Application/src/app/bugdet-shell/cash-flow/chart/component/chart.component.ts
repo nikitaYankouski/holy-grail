@@ -114,6 +114,13 @@ export class ChartComponent implements OnInit {
       datalabels: {
         display: false
       }
+    },
+    tooltips: {
+      callbacks: {
+        label: (tooltipItem, data) => {
+          return this.chartService.numberFormat(Number(tooltipItem.value));
+        }
+      }
     }
   };
 

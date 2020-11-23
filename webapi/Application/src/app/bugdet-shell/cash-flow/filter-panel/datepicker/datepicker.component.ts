@@ -64,4 +64,10 @@ export class DatepickerComponent implements OnInit {
       );
     }
   }
+
+  clear() {
+    this.dateRange.emit(undefined);
+    this.selectedRangeNgx = undefined;
+
+  }
 }

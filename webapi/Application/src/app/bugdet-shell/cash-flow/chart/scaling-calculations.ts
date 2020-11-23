@@ -25,6 +25,20 @@ export class ScalingCalculations {
     return roundScales;
   }
 
+  static roundLastDigit(leftMin: number, numberSteps): number {
+    if (numberSteps === 1) {
+      return Math.round(leftMin);
+    }
+
+    leftMin = Math.round(leftMin);
+
+    do { leftMin++; } while (!Number.isInteger(leftMin/numberSteps));
+
+    console.log('leftMin', leftMin);
+
+    return leftMin;
+  }
+
   private static getStep(scale: number): number {
     const step = 7;
     const numberDigits = Math.round(scale / step).toString().length;

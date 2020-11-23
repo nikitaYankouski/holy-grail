@@ -1,11 +1,11 @@
-import { DatePipe } from '@angular/common';
-import { Injectable } from '@angular/core';
-import { Model } from '../../../model';
-import { ScalingCalculations } from '../scaling-calculations';
-import { TickModel } from '../tick-model';
-import { ViewModelChart } from '../view-model-chart';
-import { Filter } from './filter/filter';
-import { NoFilter } from './filter/no-filter';
+import {DatePipe} from '@angular/common';
+import {Injectable} from '@angular/core';
+import {Model} from '../../../model';
+import {ScalingCalculations} from '../scaling-calculations';
+import {TickModel} from '../tick-model';
+import {ViewModelChart} from '../view-model-chart';
+import {Filter} from './filter/filter';
+import {NoFilter} from './filter/no-filter';
 import {DateRange} from '../../date-range';
 
 const _step: number = 10;
@@ -15,7 +15,8 @@ const _step: number = 10;
 })
 export class ChartService {
 
-  constructor(private datePipe: DatePipe) { }
+  constructor(private datePipe: DatePipe) {
+  }
 
   scalesCalculation(viewModel: ViewModelChart[]): TickModel {
     const maxCashIn = Math.max(...viewModel.filter(model => typeof model.cashIn !== 'undefined')
@@ -31,7 +32,6 @@ export class ChartService {
     const rightMin = minBalance <= 0 ? minBalance : 0;
 
     let chartScales = ScalingCalculations.roundUpNext(rightMax, rightMin, 'right');
-
     chartScales.leftMax = maxLeft;
     chartScales.leftMin = Math.round((chartScales.leftMax * chartScales.rightMin) / (chartScales.rightMax));
 
@@ -39,6 +39,21 @@ export class ChartService {
     chartScales.leftMax = buf.leftMax;
     chartScales.leftMin = buf.leftMin;
     chartScales.stepSizeLeft = buf.stepSizeLeft;
+
+    if (chartScales.leftMin !== 0) {
+      chartScales.leftMin = Math.round((chartScales.leftMax * chartScales.rightMin) / (chartScales.rightMax));
+
+      const numberSteps = chartScales.rightMin / chartScales.stepSizeRight;
+      const newStepSizeLeft = chartScales.leftMin / numberSteps;
+
+      if (!Number.isInteger(newStepSizeLeft)) {
+        chartScales.leftMin = ScalingCalculations.roundLastDigit(chartScales.leftMin, numberSteps);
+        chartScales.stepSizeLeft = chartScales.leftMin / numberSteps;
+      }
+      else {
+        chartScales.stepSizeLeft = newStepSizeLeft;
+      }
+    }
 
     return chartScales;
   }
@@ -56,8 +71,7 @@ export class ChartService {
         if (parentOperation.timestamp.getTime() === filter.filter(operations[nextIndex].timestamp).getTime()) {
           parentOperation = this.calculating(parentOperation, operations[nextIndex]);
           operations.splice(nextIndex, 1);
-        }
-        else {
+        } else {
           nextIndex++;
         }
       }
@@ -76,28 +90,29 @@ export class ChartService {
 
   castToView(operations: Model[], filter: Filter): ViewModelChart[] {
     return operations.map(operation => {
-        return {
-          label: this.convertDateToString(operation.timestamp, filter),
-          cashIn: typeof operation.cashIn !== 'undefined' ?
-            operation.cashIn : undefined,
-          cashOut: typeof operation.cashOut !== 'undefined' ?
-            operation.cashOut : undefined,
-          balance: typeof operation.balance !== 'undefined' ?
-            operation.balance : undefined
-        }
+      return {
+        label: this.convertDateToString(operation.timestamp, filter),
+        cashIn: typeof operation.cashIn !== 'undefined' ?
+          operation.cashIn : undefined,
+        cashOut: typeof operation.cashOut !== 'undefined' ?
+          operation.cashOut : undefined,
+        balance: typeof operation.balance !== 'undefined' ?
+          operation.balance : undefined
+      };
     });
   }
 
   numberFormat(value: number): string {
     return Intl.NumberFormat('pl', {
-      style: 'currency',
-      minimumIntegerDigits: 1,
-      currency: 'PLN' }
+        style: 'currency',
+        minimumIntegerDigits: 1,
+        currency: 'PLN'
+      }
     ).format(value);
   }
 
   private calculating(parentOperation: Model,
-    nextOperation: Model): Model {
+                      nextOperation: Model): Model {
 
     parentOperation.cashIn = this.toZero(parentOperation.cashIn);
     parentOperation.cashOut = this.toZero(parentOperation.cashOut);
