@@ -102,6 +102,7 @@ export class ChartService {
     });
   }
 
+  // may be CurrencyPipe
   numberFormat(value: number): string {
     return Intl.NumberFormat('pl', {
         style: 'currency',

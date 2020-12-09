@@ -1,5 +1,5 @@
   .bugdet-content {
-    width: 50%;
+    width: 60%;
     margin: auto;
   }
 
@@ -63,6 +63,10 @@
     color: rgb(235, 45, 45);
   }
 
+  .tr {
+    height: 25px;
+  }
+
   // CELL
 
   .mat-cell:nth-child(3) {
@@ -78,6 +82,10 @@
   .mat-cell:nth-child(5) {
     text-align: right;
     justify-content:right;
+  }
+
+  .td-description {
+    width: 28%;
   }
 
   // HEADER

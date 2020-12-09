@@ -1,8 +1,18 @@
-<div class="container">
+<div *ngIf="!noData; then existsData else noExistsData"></div>
+<ng-template #existsData>
+  <div class="container">
     <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [colors]="barChartColors"
-        [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+            [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
     </canvas>
-</div>
+  </div>
+</ng-template>
+<ng-template #noExistsData>
+  <div class="no-data">
+    <mat-icon>error</mat-icon>
+    Data not found
+  </div>
+</ng-template>
+
 
 <div class="container button-row">
     <button mat-raised-button class="button" (click)="grouping('noFilter')"

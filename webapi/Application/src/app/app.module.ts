@@ -16,12 +16,14 @@ import { TableComponent } from './bugdet-shell/cash-flow/table/component/table.c
 
 import { ChartComponent } from './bugdet-shell/cash-flow/chart/component/chart.component';
 import { FilterPanelComponent } from './bugdet-shell/cash-flow/filter-panel/filter-panel.component';
-import { DatepickerComponent } from './bugdet-shell/cash-flow/filter-panel/datepicker/datepicker.component';
 
-import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { HeadPanelComponent } from './bugdet-shell/head-panel/head-panel.component';
 import { SettingsComponent } from './bugdet-shell/settings/settings.component';
 import { CashFlowComponent } from './bugdet-shell/cash-flow/cash-flow.component';
+import { DatepickerDialogComponent } from './bugdet-shell/cash-flow/filter-panel/datepicker-dialog/datepicker-dialog.component';
+
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
+import { RenderDatepickerDirective } from './bugdet-shell/cash-flow/filter-panel/datepicker-dialog/render-datepicker.directive';
 
 @NgModule({
   declarations: [
@@ -30,10 +32,11 @@ import { CashFlowComponent } from './bugdet-shell/cash-flow/cash-flow.component'
     BugdetShellComponent,
     ChartComponent,
     FilterPanelComponent,
-    DatepickerComponent,
     HeadPanelComponent,
     SettingsComponent,
-    CashFlowComponent
+    CashFlowComponent,
+    DatepickerDialogComponent,
+    RenderDatepickerDirective
   ],
   imports: [
     BrowserModule,
@@ -43,8 +46,8 @@ import { CashFlowComponent } from './bugdet-shell/cash-flow/cash-flow.component'
     ChartsModule,
     MaterialModule,
     FormsModule,
-    NgxDaterangepickerMd.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxDaterangepickerMd.forRoot()
   ],
   providers: [
     DatePipe,

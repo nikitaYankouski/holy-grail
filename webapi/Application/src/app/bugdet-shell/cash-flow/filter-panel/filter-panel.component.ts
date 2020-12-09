@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DateRange } from '../date-range';
+import {MatDialog} from '@angular/material/dialog';
+import {DatepickerDialogComponent} from './datepicker-dialog/datepicker-dialog.component';
+import {Model} from '../../model';
+import {FilterPanelService} from './filter-panel.service';
 
 @Component({
   selector: 'app-filter-panel',
@@ -8,32 +12,46 @@ import { DateRange } from '../date-range';
 })
 export class FilterPanelComponent implements OnInit {
 
-  private _filterDateRange: DateRange;
+  readonly DATE_FORMAT: string = 'MMM d, y';
+
+  private _filterDateRange: DateRange =
+    this.filterPanelService.getFirstAndLastDateOfCurrentMonth(new Date());
 
   get filterDateRange(): DateRange {
     return this._filterDateRange;
   }
+
   set filterDateRange(value: DateRange) {
     this._filterDateRange = value;
     this.enteringFilterDateRange.emit(this._filterDateRange);
   }
 
-  private _minMaxDatepicker: DateRange;
-  get minMaxDatepicker(): DateRange {
-    return this._minMaxDatepicker;
-  }
-  @Input() set minMaxDatepicker(value: DateRange) {
-    this._minMaxDatepicker = value;
-  }
-
   @Output() enteringFilterDateRange = new EventEmitter<DateRange>();
 
-  constructor() { }
+  constructor(
+    public dialog: MatDialog,
+    private filterPanelService: FilterPanelService) { }
 
-  ngOnInit(): void { }
-
-  passFilterDateRange(dateRange: DateRange) {
-    this.filterDateRange = dateRange;
+  ngOnInit(): void {
   }
 
+  openDatePicker(): void {
+    const dialogRef = this.dialog.open(DatepickerDialogComponent, {
+      width: '55%',
+      height: '58%',
+      backdropClass: 'backdropBackground',
+      hasBackdrop: true,
+      position: {
+        top: '7.5%',
+        left: '0.7%'
+      },
+      data: this.filterDateRange
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (typeof result !== 'undefined') {
+        this.filterDateRange = result;
+      }
+    });
+  }
 }

@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Model} from '../model';
-import {DateRange} from './date-range';
 import {BugdetShellService} from '../bugdet-shell.service';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,21 +21,13 @@ export class CashFlowService {
     });
   }
 
-  calculateMinMaxOperations(operations: Model[]): DateRange {
-    const sortedOperations = this.sortByDate(operations);
-    return {
-      startDate: sortedOperations[0].timestamp,
-      endDate: sortedOperations[sortedOperations.length - 1].timestamp
-    };
-  }
-
   sortByDate(models: Model[]): Model[] {
     return models.slice().sort((a: Model, b: Model) => {
       return a.timestamp.getTime() - b.timestamp.getTime();
     });
   }
 
-  balanceСalculation(operations: Model[], bank: number): Model[] {
+  calculateBalance(operations: Model[], bank: number): Model[] {
     operations.forEach(operation => {
       operation.cashIn = this.toZero(operation.cashIn);
       operation.cashOut = this.toZero(operation.cashOut);

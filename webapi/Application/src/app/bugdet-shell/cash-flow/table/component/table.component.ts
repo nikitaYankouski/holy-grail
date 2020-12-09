@@ -22,6 +22,7 @@ export class TableComponent implements OnInit {
   get bank(): number {
     return this._bank;
   }
+
   @Input() set bank(value: number) {
     this._bank = value;
     this.inputBank();
@@ -57,7 +58,6 @@ export class TableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.inputBank();
   }
 
   getOperations() {
@@ -74,13 +74,13 @@ export class TableComponent implements OnInit {
       this.operations = this.tableService.castToOperations(elements);
     });
 
-    this.balanceСalculation(this.operations);
+    this.calculateBalance(this.operations);
     this.dataSource.data = this.tableService.castToViewModel(this.operations);
   }
 
-  balanceСalculation(asynOperationsTable: Model[]): Model[] {
+  calculateBalance(operations: Model[]): Model[] {
     if ((typeof this.bank !== 'undefined') && (typeof this.bank !== "string")) {
-      return this.cashFlowService.balanceСalculation(asynOperationsTable, this.bank);
+      return this.cashFlowService.calculateBalance(operations, this.bank);
     }
   }
 
@@ -97,7 +97,7 @@ export class TableComponent implements OnInit {
   }
 
   refreshData() {
-    this.balanceСalculation(this.operations);
+    this.calculateBalance(this.operations);
     this.dataSource.data = this.tableService.castToViewModel(this.operations);
     this.operationsChart.emit([...this.cashFlowService.castNewObject(this.operations)]);
   }

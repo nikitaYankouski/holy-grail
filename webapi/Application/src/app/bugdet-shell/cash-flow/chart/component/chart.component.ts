@@ -1,21 +1,21 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
 
-import { ChartDataSets, ChartOptions, ChartType, ChartYAxe } from 'chart.js';
-import { Color, Label } from 'ng2-charts';
+import {ChartDataSets, ChartOptions, ChartType, ChartYAxe} from 'chart.js';
+import {Color, Label} from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
-import { ChartService } from '../services/chart.service';
-import { Model } from '../../../model';
+import {ChartService} from '../services/chart.service';
+import {Model} from '../../../model';
 
-import { Filter } from '../services/filter/filter';
-import { FilterDay } from '../services/filter/filter-day';
-import { FilterMonth } from '../services/filter/filter-month';
-import { FilterYear } from '../services/filter/filter-year';
-import { NoFilter } from '../services/filter/no-filter';
-import { ViewModelChart } from '../view-model-chart';
+import {Filter} from '../services/filter/filter';
+import {FilterDay} from '../services/filter/filter-day';
+import {FilterMonth} from '../services/filter/filter-month';
+import {FilterYear} from '../services/filter/filter-year';
+import {NoFilter} from '../services/filter/no-filter';
+import {ViewModelChart} from '../view-model-chart';
 
-import { BaseChartDirective } from 'ng2-charts';
-import { TickModel } from '../tick-model';
+import {BaseChartDirective} from 'ng2-charts';
+import {TickModel} from '../tick-model';
 import {DateRange} from '../../date-range';
 import {CashFlowService} from '../../cash-flow.service';
 
@@ -37,6 +37,7 @@ export class ChartComponent implements OnInit {
   get bank(): number {
     return this._bank;
   }
+
   @Input() set bank(value: number) {
     this._bank = value;
   }
@@ -44,8 +45,9 @@ export class ChartComponent implements OnInit {
   private _filterDateRange: DateRange;
 
   get filterDateRange(): DateRange {
-    return  this._filterDateRange;
+    return this._filterDateRange;
   }
+
   @Input() set filterDateRange(value: DateRange) {
     this._filterDateRange = value;
     this.refreshDataInChart(this.currentFilter);
@@ -56,6 +58,7 @@ export class ChartComponent implements OnInit {
   get operations(): Model[] {
     return this._operations;
   }
+
   @Input() set operations(value: Model[]) {
     this._operations = value;
     this.refreshDataInChart(this.currentFilter);
@@ -66,12 +69,12 @@ export class ChartComponent implements OnInit {
   get operationsGroped(): Model[] {
     return this._operationsGroped;
   }
+
   set operationsGroped(value: Model[]) {
     this._operationsGroped = value;
   }
 
   viewModel: ViewModelChart[];
-
 
   barChartLabels: Label[] = [];
 
@@ -91,7 +94,8 @@ export class ChartComponent implements OnInit {
           ticks: {
             beginAtZero: true,
             callback: (value, index, values) => {
-              return this.chartService.numberFormat(Number(value));;
+              return this.chartService.numberFormat(Number(value));
+              ;
             }
           }
         },
@@ -104,7 +108,8 @@ export class ChartComponent implements OnInit {
           ticks: {
             beginAtZero: true,
             callback: (value, index, values) => {
-              return this.chartService.numberFormat(Number(value));;
+              return this.chartService.numberFormat(Number(value));
+              ;
             }
           }
         }
@@ -125,9 +130,9 @@ export class ChartComponent implements OnInit {
   };
 
   barChartData: ChartDataSets[] = [
-    { data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1', fill: false, lineTension: 0 },
-    { data: [], label: DirectionsChart.cashIn, yAxisID: 'y-axis-0', stack: 'a' },
-    { data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'b' },
+    {data: [], label: DirectionsChart.balance, type: 'line', yAxisID: 'y-axis-1', fill: false, lineTension: 0},
+    {data: [], label: DirectionsChart.cashIn, yAxisID: 'y-axis-0', stack: 'a'},
+    {data: [], label: DirectionsChart.cashOut, yAxisID: 'y-axis-0', stack: 'b'},
   ];
 
   barChartColors: Color[] = [
@@ -148,6 +153,8 @@ export class ChartComponent implements OnInit {
 
   currentFilter: Filter = new NoFilter();
 
+  noData: boolean = false;
+
   @ViewChild(BaseChartDirective) private _chart;
 
   constructor(
@@ -155,8 +162,7 @@ export class ChartComponent implements OnInit {
     private cashFlowService: CashFlowService
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   refreshDataInChart(typeFilter: Filter) {
     if (typeof this.operations !== 'undefined') {
@@ -165,12 +171,21 @@ export class ChartComponent implements OnInit {
       );
       this.operationsGroped = this.cashFlowService.sortByDate(this.operationsGroped);
 
-      this.cashFlowService.balanceСalculation(this.operationsGroped, this.bank);
+      this.cashFlowService.calculateBalance(this.operationsGroped, this.bank);
 
-      if (typeof this.filterDateRange !== 'undefined') {
-        this.operationsGroped = this.chartService
-          .filterByDate(this.operationsGroped, this.filterDateRange);
+      if (typeof this.filterDateRange === 'undefined') {
+        this.filterDateRange = this.getFirstAndLastDateOfCurrentMonth(new Date());
       }
+
+      this.operationsGroped = this.chartService
+        .filterByDate(this.operationsGroped, this.filterDateRange);
+
+      if (this.operationsGroped.length === 0) {
+        this.noData = true;
+        return;
+      }
+
+      this.noData = false;
 
       this.viewModel = this.chartService.castToView(this.operationsGroped, this.currentFilter);
 
@@ -178,6 +193,13 @@ export class ChartComponent implements OnInit {
 
       this.chartRefresh(); // it's possible not to update the chart when filtering
     }
+  }
+
+  getFirstAndLastDateOfCurrentMonth(lastDate: Date): DateRange {
+    return new DateRange(
+      new Date(lastDate.getFullYear(), lastDate.getMonth(), 1),
+      new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0)
+    );
   }
 
   chartRefresh() {
@@ -242,6 +264,6 @@ export class ChartComponent implements OnInit {
         this.refreshDataInChart(this.currentFilter);
         break;
       }
-    };
+    }
   }
 }

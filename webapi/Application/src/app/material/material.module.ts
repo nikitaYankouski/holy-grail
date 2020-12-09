@@ -15,6 +15,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+import { MatGridListModule } from '@angular/material/grid-list';
+
 
 @NgModule({
   declarations: [],
@@ -28,7 +30,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatFormFieldModule,
     MatDialogModule,
     MatIconModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatGridListModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
   ],
   exports: [
     CommonModule,
@@ -39,12 +44,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatSortModule,
     MatFormFieldModule,
     MatIconModule,
-
     MatNativeDateModule,
     MatDatepickerModule,
-
     MatDialogModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatGridListModule,
   ]
 })
 export class MaterialModule { }

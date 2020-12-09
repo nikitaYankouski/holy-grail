@@ -1,1 +1,6 @@
-<app-datepicker [minMaxDate]="minMaxDatepicker" (dateRange)="passFilterDateRange($event)"></app-datepicker>
+<div class="button">
+  <button mat-raised-button (click)="openDatePicker()" >
+    <mat-icon>date_range</mat-icon>
+    {{filterDateRange.startDate | date: DATE_FORMAT}} - {{filterDateRange.endDate | date: DATE_FORMAT}}
+  </button>
+</div>

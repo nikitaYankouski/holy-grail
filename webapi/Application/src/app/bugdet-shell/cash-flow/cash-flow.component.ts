@@ -18,7 +18,7 @@ export class CashFlowComponent implements OnInit {
 
   filterDateRangeBuffer: DateRange;
 
-  timeLimitBugdet: DateRange;
+  // enteringLastDate: Date;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,12 +34,10 @@ export class CashFlowComponent implements OnInit {
     this.filterDateRangeBuffer = filterDateRange;
   }
 
-  refreshBankBuffer(bank: number) {
-
-  }
-
   refreshOperations(operations: Model[]) {
     this.operationsBuffer = operations;
-    this.timeLimitBugdet = this.cashFlowService.calculateMinMaxOperations(operations);
+    // if (typeof this.enteringLastDate === 'undefined') {
+    //   this.enteringLastDate = this.cashFlowService.sortByDate(operations)[operations.length - 1].timestamp;
+    // }
   }
 }
