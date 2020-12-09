@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from "@angular/core";
 import { moveItemInArray, CdkDragDrop } from "@angular/cdk/drag-drop";
 
-import { BugdetShellService } from '../../../bugdet-shell.service';
+import { CashFlowShellService } from '../../../cash-flow-shell.service';
 import { TableService } from '../services/table.service';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,7 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Model } from '../../../model';
 import { ViewModelTable } from '../view-model-table';
 import { DatePipe } from '@angular/common';
-import {CashFlowService} from '../../cash-flow.service';
+import {BudgetService} from '../../budget.service';
 
 @Component({
   selector: 'app-table',
@@ -53,7 +53,7 @@ export class TableComponent implements OnInit {
 
   constructor(
     private tableService: TableService,
-    private cashFlowService: CashFlowService,
+    private cashFlowService: BudgetService,
     public datePipe: DatePipe
   ) { }
 

@@ -11,30 +11,30 @@ import { AppRoutingModule } from './app-routing.module';
 import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
-import { BugdetShellComponent } from './bugdet-shell/bugdet-shell.component';
-import { TableComponent } from './bugdet-shell/cash-flow/table/component/table.component';
+import { CashFlowShellComponent } from './cash-flow-shell/cash-flow-shell.component';
+import { TableComponent } from './cash-flow-shell/budget/table/component/table.component';
 
-import { ChartComponent } from './bugdet-shell/cash-flow/chart/component/chart.component';
-import { FilterPanelComponent } from './bugdet-shell/cash-flow/filter-panel/filter-panel.component';
+import { ChartComponent } from './cash-flow-shell/budget/chart/component/chart.component';
+import { FilterPanelComponent } from './cash-flow-shell/budget/filter-panel/filter-panel.component';
 
-import { HeadPanelComponent } from './bugdet-shell/head-panel/head-panel.component';
-import { SettingsComponent } from './bugdet-shell/settings/settings.component';
-import { CashFlowComponent } from './bugdet-shell/cash-flow/cash-flow.component';
-import { DatepickerDialogComponent } from './bugdet-shell/cash-flow/filter-panel/datepicker-dialog/datepicker-dialog.component';
+import { HeadPanelComponent } from './cash-flow-shell/head-panel/head-panel.component';
+import { SettingsComponent } from './cash-flow-shell/settings/settings.component';
+import { BudgetComponent } from './cash-flow-shell/budget/budget.component';
+import { DatepickerDialogComponent } from './cash-flow-shell/budget/filter-panel/datepicker-dialog/datepicker-dialog.component';
 
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
-import { RenderDatepickerDirective } from './bugdet-shell/cash-flow/filter-panel/datepicker-dialog/render-datepicker.directive';
+import { RenderDatepickerDirective } from './cash-flow-shell/budget/filter-panel/datepicker-dialog/render-datepicker.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     TableComponent,
-    BugdetShellComponent,
+    CashFlowShellComponent,
     ChartComponent,
     FilterPanelComponent,
     HeadPanelComponent,
     SettingsComponent,
-    CashFlowComponent,
+    BudgetComponent,
     DatepickerDialogComponent,
     RenderDatepickerDirective
   ],

@@ -17,7 +17,7 @@ import {ViewModelChart} from '../view-model-chart';
 import {BaseChartDirective} from 'ng2-charts';
 import {TickModel} from '../tick-model';
 import {DateRange} from '../../date-range';
-import {CashFlowService} from '../../cash-flow.service';
+import {BudgetService} from '../../budget.service';
 
 enum DirectionsChart {
   balance = 'BALANCE',
@@ -159,7 +159,7 @@ export class ChartComponent implements OnInit {
 
   constructor(
     private chartService: ChartService,
-    private cashFlowService: CashFlowService
+    private cashFlowService: BudgetService
   ) { }
 
   ngOnInit(): void { }

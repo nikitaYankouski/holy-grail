@@ -1,18 +1,18 @@
 import {Injectable} from '@angular/core';
 import {Model} from '../model';
-import {BugdetShellService} from '../bugdet-shell.service';
+import {CashFlowShellService} from '../cash-flow-shell.service';
 import {Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CashFlowService {
+export class BudgetService {
 
   private dataStringSource = new Subject<Model[]>();
 
   dataString = this.dataStringSource.asObservable();
 
-  constructor(private budgetApi: BugdetShellService) {
+  constructor(private budgetApi: CashFlowShellService) {
   }
 
   getOperations(): void {

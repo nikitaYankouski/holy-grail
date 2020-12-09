@@ -10,7 +10,7 @@ import { Model } from './model';
 @Injectable({
   providedIn: 'root'
 })
-export class BugdetShellService {
+export class CashFlowShellService {
   myAppUrl: string;
 
   httpOptions = {
