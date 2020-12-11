@@ -1,8 +1,8 @@
 <div *ngIf="!noData; then existsData else noExistsData"></div>
 <ng-template #existsData>
   <div class="container">
-    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [colors]="barChartColors"
-            [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+    <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors"
+            [options]="chartOptions" [plugins]="chartPlugins" [legend]="chartLegend" [chartType]="chartType">
     </canvas>
   </div>
 </ng-template>

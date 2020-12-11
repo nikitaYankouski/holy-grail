@@ -1,14 +1,12 @@
 import {DatePipe} from '@angular/common';
 import {Injectable} from '@angular/core';
-import {Model} from '../../../model';
+import {Operations} from '../../../operations';
 import {ScalingCalculations} from '../scaling-calculations';
 import {TickModel} from '../tick-model';
 import {ViewModelChart} from '../view-model-chart';
 import {Filter} from './filter/filter';
 import {NoFilter} from './filter/no-filter';
 import {DateRange} from '../../date-range';
-
-const _step: number = 10;
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +26,7 @@ export class ChartService {
     const minBalance = Math.min(...viewModel.map(model => model.balance));
 
     const maxLeft = maxCashIn >= maxCashOut ? maxCashIn : maxCashOut;
+
     const rightMax = maxBalance;
     const rightMin = minBalance <= 0 ? minBalance : 0;
 
@@ -54,12 +53,11 @@ export class ChartService {
         chartScales.stepSizeLeft = newStepSizeLeft;
       }
     }
-
     return chartScales;
   }
 
   // rewrite
-  grouping(operations: Model[], filter: Filter): Model[] {
+  grouping(operations: Operations[], filter: Filter): Operations[] {
     if (filter instanceof NoFilter) {
       return operations;
     }
@@ -68,7 +66,9 @@ export class ChartService {
       parentOperation.timestamp = filter.filter(parentOperation.timestamp);
 
       for (let nextIndex = ++index; nextIndex < operations.length;) {
-        if (parentOperation.timestamp.getTime() === filter.filter(operations[nextIndex].timestamp).getTime()) {
+        const isNextTimestampEqual = parentOperation.timestamp.getTime() ===
+          filter.filter(operations[nextIndex].timestamp).getTime();
+        if (isNextTimestampEqual) {
           parentOperation = this.calculating(parentOperation, operations[nextIndex]);
           operations.splice(nextIndex, 1);
         } else {
@@ -79,7 +79,7 @@ export class ChartService {
     return operations;
   }
 
-  filterByDate(operations: Model[], filter: DateRange): Model[] {
+  filterByDate(operations: Operations[], filter: DateRange): Operations[] {
     return operations.filter(operation =>
       operation.timestamp >= filter.startDate && operation.timestamp <= filter.endDate);
   }
@@ -88,7 +88,7 @@ export class ChartService {
     return this.datePipe.transform(date, filter.format);
   }
 
-  castToView(operations: Model[], filter: Filter): ViewModelChart[] {
+  castToView(operations: Operations[], filter: Filter): ViewModelChart[] {
     return operations.map(operation => {
       return {
         label: this.convertDateToString(operation.timestamp, filter),
@@ -112,8 +112,8 @@ export class ChartService {
     ).format(value);
   }
 
-  private calculating(parentOperation: Model,
-                      nextOperation: Model): Model {
+  private calculating(parentOperation: Operations,
+                      nextOperation: Operations): Operations {
 
     parentOperation.cashIn = this.toZero(parentOperation.cashIn);
     parentOperation.cashOut = this.toZero(parentOperation.cashOut);

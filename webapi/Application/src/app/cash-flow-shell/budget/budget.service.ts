@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Model} from '../model';
+import {Operations} from '../operations';
 import {CashFlowShellService} from '../cash-flow-shell.service';
 import {Subject} from 'rxjs';
 
@@ -8,7 +8,7 @@ import {Subject} from 'rxjs';
 })
 export class BudgetService {
 
-  private dataStringSource = new Subject<Model[]>();
+  private dataStringSource = new Subject<Operations[]>();
 
   dataString = this.dataStringSource.asObservable();
 
@@ -21,13 +21,13 @@ export class BudgetService {
     });
   }
 
-  sortByDate(models: Model[]): Model[] {
-    return models.slice().sort((a: Model, b: Model) => {
+  sortByDate(models: Operations[]): Operations[] {
+    return models.slice().sort((a: Operations, b: Operations) => {
       return a.timestamp.getTime() - b.timestamp.getTime();
     });
   }
 
-  calculateBalance(operations: Model[], bank: number): Model[] {
+  calculateBalance(operations: Operations[], bank: number): Operations[] {
     operations.forEach(operation => {
       operation.cashIn = this.toZero(operation.cashIn);
       operation.cashOut = this.toZero(operation.cashOut);
@@ -46,7 +46,7 @@ export class BudgetService {
     return operations;
   }
 
-  castNewObject(operations: Model[]): Model[] { // slice
+  castNewObject(operations: Operations[]): Operations[] { // slice
     let passToChart = [];
     operations.forEach(operation => {
       passToChart.push({

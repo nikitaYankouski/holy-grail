@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DateRange } from '../date-range';
 import {MatDialog} from '@angular/material/dialog';
 import {DatepickerDialogComponent} from './datepicker-dialog/datepicker-dialog.component';
-import {Model} from '../../model';
+import {Operations} from '../../operations';
 import {FilterPanelService} from './filter-panel.service';
 
 @Component({

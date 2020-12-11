@@ -4,8 +4,8 @@ import { environment } from 'src/environments/environment';
 import { of, Observable } from "rxjs";
 import { catchError, map } from 'rxjs/operators';
 
-import { DBModel } from './db-model';
-import { Model } from './model';
+import { DbOperations } from './db-operations';
+import { Operations } from './operations';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +21,10 @@ export class CashFlowShellService {
     this.myAppUrl = environment.appUrl;
   }
 
-  getOperations(): Observable<Model[]> {
-    return this.http.get<DBModel[]>(this.myAppUrl)
+  getOperations(): Observable<Operations[]> {
+    return this.http.get<DbOperations[]>(this.myAppUrl)
     .pipe(
-      map((operations: DBModel[]) =>
+      map((operations: DbOperations[]) =>
         operations.map(operation => this.casting(operation))
       ),
       catchError(this.handleError<any>('getOperations'))
@@ -38,8 +38,8 @@ export class CashFlowShellService {
     };
   }
 
-  private casting(operation: DBModel) : Model {
-    let model: Model = {
+  private casting(operation: DbOperations) : Operations {
+    let model: Operations = {
       id: operation.id,
       budgetId: operation.budgetId,
       description: operation.description,

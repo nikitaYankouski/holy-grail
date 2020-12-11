@@ -1,15 +1,14 @@
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from "@angular/core";
 import { moveItemInArray, CdkDragDrop } from "@angular/cdk/drag-drop";
 
-import { CashFlowShellService } from '../../../cash-flow-shell.service';
 import { TableService } from '../services/table.service';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Model } from '../../../model';
+import { Operations } from '../../../operations';
 import { ViewModelTable } from '../view-model-table';
 import { DatePipe } from '@angular/common';
-import {BudgetService} from '../../budget.service';
+import { BudgetService } from '../../budget.service';
 
 @Component({
   selector: 'app-table',
@@ -28,18 +27,18 @@ export class TableComponent implements OnInit {
     this.inputBank();
   }
 
-  private _operations: Model[];
+  private _operations: Operations[];
 
-  get operations(): Model[] {
+  get operations(): Operations[] {
     return this._operations;
   }
-  set operations(value: Model[]) {
+  set operations(value: Operations[]) {
     this._operations = value;
   }
 
   dataSource = new MatTableDataSource<ViewModelTable>();
 
-  @Output() operationsChart = new EventEmitter<Model[]>();
+  @Output() operationsChart = new EventEmitter<Operations[]>();
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -78,7 +77,7 @@ export class TableComponent implements OnInit {
     this.dataSource.data = this.tableService.castToViewModel(this.operations);
   }
 
-  calculateBalance(operations: Model[]): Model[] {
+  calculateBalance(operations: Operations[]): Operations[] {
     if ((typeof this.bank !== 'undefined') && (typeof this.bank !== "string")) {
       return this.cashFlowService.calculateBalance(operations, this.bank);
     }
