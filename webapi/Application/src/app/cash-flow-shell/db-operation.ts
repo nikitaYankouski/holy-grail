@@ -1,4 +1,4 @@
-export interface DbOperations {
+export interface DbOperation {
     id: number;
     budgetId: number;
     description: number;

@@ -2,7 +2,6 @@ export class TickModel {
     leftMax: number;
     leftMin: number;
     stepSizeLeft: number;
-
     rightMax: number;
     rightMin: number;
     stepSizeRight: number;
@@ -14,5 +13,5 @@ export class TickModel {
         this.rightMax = 0;
         this.rightMin = 0;
         this.stepSizeRight = 0;
-    } 
+    }
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Operations} from '../operations';
+import {Operation} from '../operation';
 import {DateRange} from './date-range';
 import {ActivatedRoute} from '@angular/router';
 
@@ -10,14 +10,15 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class BudgetComponent implements OnInit {
 
-  enteringBank: number = 0;
+  enteringBank = 0;
 
-  operationsBuffer: Operations[];
+  operationsBuffer: Operation[];
 
   filterDateRangeBuffer: DateRange;
 
   constructor(
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute) {
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -25,11 +26,11 @@ export class BudgetComponent implements OnInit {
     });
   }
 
-  refreshFilterDateRange(filterDateRange: DateRange) {
+  refreshFilterDateRange(filterDateRange: DateRange): void {
     this.filterDateRangeBuffer = filterDateRange;
   }
 
-  refreshOperations(operations: Operations[]) {
+  refreshOperations(operations: Operation[]): void {
     this.operationsBuffer = operations;
   }
 }

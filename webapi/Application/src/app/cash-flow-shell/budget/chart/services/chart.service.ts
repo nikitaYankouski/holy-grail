@@ -1,12 +1,12 @@
 import {DatePipe} from '@angular/common';
 import {Injectable} from '@angular/core';
-import {Operations} from '../../../operations';
+import {Operation} from '../../../operation';
 import {ScalingCalculations} from '../scaling-calculations';
 import {TickModel} from '../tick-model';
-import {ViewModelChart} from '../view-model-chart';
+import {ViewOperationChart} from '../view-operation-chart';
 import {Filter} from './filter/filter';
-import {NoFilter} from './filter/no-filter';
 import {DateRange} from '../../date-range';
+import {BudgetService} from '../../budget.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,22 @@ export class ChartService {
   constructor(private datePipe: DatePipe) {
   }
 
-  scalesCalculation(viewModel: ViewModelChart[]): TickModel {
+  static calculating(parentOperation: Operation, nextOperation: Operation): Operation {
+    parentOperation.cashIn = BudgetService.toZero(parentOperation.cashIn);
+    parentOperation.cashOut = BudgetService.toZero(parentOperation.cashOut);
+    nextOperation.cashIn = BudgetService.toZero(nextOperation.cashIn);
+    nextOperation.cashOut = BudgetService.toZero(nextOperation.cashOut);
+
+    parentOperation.cashIn += nextOperation.cashIn;
+    parentOperation.cashOut += nextOperation.cashOut;
+
+    parentOperation.cashIn = BudgetService.toUndefined(parentOperation.cashIn);
+    parentOperation.cashOut = BudgetService.toUndefined(parentOperation.cashOut);
+
+    return parentOperation;
+  }
+
+  scalesCalculation(viewModel: ViewOperationChart[]): TickModel {
     const maxCashIn = Math.max(...viewModel.filter(model => typeof model.cashIn !== 'undefined')
       .map(model => model.cashIn));
     const maxCashOut = Math.max(...viewModel.filter(model => typeof model.cashOut !== 'undefined')
@@ -30,14 +45,14 @@ export class ChartService {
     const rightMax = maxBalance;
     const rightMin = minBalance <= 0 ? minBalance : 0;
 
-    let chartScales = ScalingCalculations.roundUpNext(rightMax, rightMin, 'right');
+    const chartScales = ScalingCalculations.roundUpNext(rightMax, rightMin, 'right');
     chartScales.leftMax = maxLeft;
     chartScales.leftMin = Math.round((chartScales.leftMax * chartScales.rightMin) / (chartScales.rightMax));
 
-    let buf = ScalingCalculations.roundUpNext(chartScales.leftMax, chartScales.leftMin, 'left');
-    chartScales.leftMax = buf.leftMax;
-    chartScales.leftMin = buf.leftMin;
-    chartScales.stepSizeLeft = buf.stepSizeLeft;
+    const chartScalesNextRoundUp = ScalingCalculations.roundUpNext(chartScales.leftMax, chartScales.leftMin, 'left');
+    chartScales.leftMax = chartScalesNextRoundUp.leftMax;
+    chartScales.leftMin = chartScalesNextRoundUp.leftMin;
+    chartScales.stepSizeLeft = chartScalesNextRoundUp.stepSizeLeft;
 
     if (chartScales.leftMin !== 0) {
       chartScales.leftMin = Math.round((chartScales.leftMax * chartScales.rightMin) / (chartScales.rightMax));
@@ -56,30 +71,25 @@ export class ChartService {
     return chartScales;
   }
 
-  // rewrite
-  grouping(operations: Operations[], filter: Filter): Operations[] {
-    if (filter instanceof NoFilter) {
-      return operations;
-    }
-
-    operations.forEach((parentOperation, index) => {
-      parentOperation.timestamp = filter.filter(parentOperation.timestamp);
+  toGroupOperations(operations: Operation[], filter: Filter): Operation[] {
+    return operations.map((operation, index) => {
+      operation.timestamp = filter.filter(operation.timestamp);
 
       for (let nextIndex = ++index; nextIndex < operations.length;) {
-        const isNextTimestampEqual = parentOperation.timestamp.getTime() ===
-          filter.filter(operations[nextIndex].timestamp).getTime();
+        const isNextTimestampEqual = operation.timestamp.getTime()
+          === filter.filter(operations[nextIndex].timestamp).getTime();
         if (isNextTimestampEqual) {
-          parentOperation = this.calculating(parentOperation, operations[nextIndex]);
+          operation = ChartService.calculating(operation, operations[nextIndex]);
           operations.splice(nextIndex, 1);
-        } else {
-          nextIndex++;
+          continue;
         }
+        nextIndex++;
       }
+      return operation;
     });
-    return operations;
   }
 
-  filterByDate(operations: Operations[], filter: DateRange): Operations[] {
+  filterByDate(operations: Operation[], filter: DateRange): Operation[] {
     return operations.filter(operation =>
       operation.timestamp >= filter.startDate && operation.timestamp <= filter.endDate);
   }
@@ -88,7 +98,7 @@ export class ChartService {
     return this.datePipe.transform(date, filter.format);
   }
 
-  castToView(operations: Operations[], filter: Filter): ViewModelChart[] {
+  castToView(operations: Operation[], filter: Filter): ViewOperationChart[] {
     return operations.map(operation => {
       return {
         label: this.convertDateToString(operation.timestamp, filter),
@@ -100,40 +110,5 @@ export class ChartService {
           operation.balance : undefined
       };
     });
-  }
-
-  // may be CurrencyPipe
-  numberFormat(value: number): string {
-    return Intl.NumberFormat('pl', {
-        style: 'currency',
-        minimumIntegerDigits: 1,
-        currency: 'PLN'
-      }
-    ).format(value);
-  }
-
-  private calculating(parentOperation: Operations,
-                      nextOperation: Operations): Operations {
-
-    parentOperation.cashIn = this.toZero(parentOperation.cashIn);
-    parentOperation.cashOut = this.toZero(parentOperation.cashOut);
-    nextOperation.cashIn = this.toZero(nextOperation.cashIn);
-    nextOperation.cashOut = this.toZero(nextOperation.cashOut);
-
-    parentOperation.cashIn += nextOperation.cashIn;
-    parentOperation.cashOut += nextOperation.cashOut;
-
-    parentOperation.cashIn = this.toUndefined(parentOperation.cashIn);
-    parentOperation.cashOut = this.toUndefined(parentOperation.cashOut);
-
-    return parentOperation;
-  }
-
-  private toZero<T>(value: T): number {
-    return typeof (undefined) === typeof (value) ? 0 : Number(value);
-  }
-
-  private toUndefined<T>(value: T): any {
-    return Number(value) === 0 ? undefined : value;
   }
 }

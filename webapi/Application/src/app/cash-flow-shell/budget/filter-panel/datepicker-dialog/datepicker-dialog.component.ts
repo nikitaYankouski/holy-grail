@@ -6,6 +6,7 @@ import {Moment} from 'moment';
 import * as moment from 'moment';
 import {DaterangepickerComponent, DaterangepickerDirective} from 'ngx-daterangepicker-material';
 import {AbstractControl, FormControl} from '@angular/forms';
+import {BudgetService} from '../../budget.service';
 
 const DATE_FORMAT: string = 'd/MMM/y';
 
@@ -36,7 +37,7 @@ export class DatepickerDialogComponent implements OnInit {
     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
     'This Month': [moment().startOf('month'), moment().endOf('month')],
     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-  }
+  };
 
   constructor(public datePipe: DatePipe,
               public dialogRef: MatDialogRef<DatepickerDialogComponent>,
@@ -46,7 +47,7 @@ export class DatepickerDialogComponent implements OnInit {
     this.selected = {
       startDate: moment(this.dateStart.startDate),
       endDate: moment(this.dateStart.endDate)
-    }
+    };
 
     this.viewInputStart = this.datePipe.transform(this.dateStart.startDate.toString(), DATE_FORMAT);
     this.viewInputEnd = this.datePipe.transform(this.dateStart.endDate.toString(), DATE_FORMAT);
@@ -79,7 +80,7 @@ export class DatepickerDialogComponent implements OnInit {
     this.selected = {
       startDate: event.startDate,
       endDate: event.endDate
-    }
+    };
   }
 
   setStartDate(event) {
@@ -102,7 +103,7 @@ export class DatepickerDialogComponent implements OnInit {
   }
 
   chooseMonth(month: string): void {
-    this.month = month
+    this.month = month;
 
     switch (month) {
       case 'Last': {
@@ -146,11 +147,11 @@ export class DatepickerDialogComponent implements OnInit {
       dateBuff.setFullYear(year);
     }
     dateBuff.setMonth(month);
-    return this.getFirstAndLastDateOfCurrentMonth(dateBuff);
+    return BudgetService.getFirstAndLastDateOfCurrentMonth(dateBuff);
   }
 
   getCurrentMonth(): DateRange {
-    return this.getFirstAndLastDateOfCurrentMonth(new Date());
+    return BudgetService.getFirstAndLastDateOfCurrentMonth(new Date());
   }
 
   getNextMonth(): DateRange {
@@ -163,10 +164,10 @@ export class DatepickerDialogComponent implements OnInit {
       dateBuff.setFullYear(year);
     }
     dateBuff.setMonth(month);
-    return this.getFirstAndLastDateOfCurrentMonth(dateBuff);
+    return BudgetService.getFirstAndLastDateOfCurrentMonth(dateBuff);
   }
 
-  setDataFoo(date: DateRange) {
+  setDataFoo(date: DateRange): void {
     this.setDataRange({
       startDate: moment(date.startDate),
       endDate: moment(date.endDate)
@@ -189,12 +190,5 @@ export class DatepickerDialogComponent implements OnInit {
 
   set viewInputEnd(value: string) {
     this._viewInputEnd = value;
-  }
-
-  getFirstAndLastDateOfCurrentMonth(lastDate: Date): DateRange {
-    return new DateRange(
-      new Date(lastDate.getFullYear(), lastDate.getMonth(), 1),
-      new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0)
-    );
   }
 }

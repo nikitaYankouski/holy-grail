@@ -4,5 +4,5 @@ export class NoFilter implements Filter {
     name = 'noFilter';
     format = undefined;
 
-    filter() { return undefined; }
-} 
+    filter(): undefined { return undefined; }
+}

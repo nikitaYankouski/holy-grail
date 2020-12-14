@@ -1,20 +1,17 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
 
   enteringBank: number;
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
-  passingBank(value: string) {
+  passingBank(value: string): void {
     this.enteringBank = parseInt(value);
   }
 }

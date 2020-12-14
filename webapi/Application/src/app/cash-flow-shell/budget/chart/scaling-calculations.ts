@@ -30,7 +30,7 @@ export class ScalingCalculations {
     }
 
     leftMin = Math.round(leftMin);
-    do { leftMin++; } while (!Number.isInteger(leftMin/numberSteps));
+    do { leftMin++; } while (!Number.isInteger(leftMin / numberSteps));
 
     return leftMin;
   }
@@ -42,13 +42,13 @@ export class ScalingCalculations {
       (this.concatZeros(numberDigits - 1)));
   }
 
-  private static getDigitFromNumber(number: number, index: number): number {
-    return Number(number.toString().charAt(index));
+  private static getDigitFromNumber(value: number, index: number): number {
+    return Number(value.toString().charAt(index));
   }
 
-  private static concatZeros(number: number): string {
-    let zeros: string = '';
-    for (let count = 0; count < number; count++) { zeros += '0'; }
+  private static concatZeros(value: number): string {
+    let zeros = '';
+    for (let count = 0; count < value; count++) { zeros += '0'; }
     return zeros;
   }
 }

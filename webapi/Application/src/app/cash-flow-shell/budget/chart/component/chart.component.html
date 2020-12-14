@@ -1,4 +1,4 @@
-<div *ngIf="!noData; then existsData else noExistsData"></div>
+<div *ngIf="this.operationsGrouped.length !== 0; then existsData else noExistsData"></div>
 <ng-template #existsData>
   <div class="container">
     <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors"
@@ -12,7 +12,6 @@
     Data not found
   </div>
 </ng-template>
-
 
 <div class="container button-row">
     <button mat-raised-button class="button" (click)="grouping('noFilter')"

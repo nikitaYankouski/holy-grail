@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './cash-flow-shell.component.html',
   styleUrls: ['./cash-flow-shell.component.scss']
 })
-export class CashFlowShellComponent implements OnInit {
+export class CashFlowShellComponent {
 
   constructor() {
-  }
-
-  ngOnInit(): void {
   }
 }

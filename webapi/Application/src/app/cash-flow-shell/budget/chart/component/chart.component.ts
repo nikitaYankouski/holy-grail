@@ -1,21 +1,20 @@
-import {ChangeDetectionStrategy, Component, Input, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
 
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
 import {ChartService} from '../services/chart.service';
-import {Operations} from '../../../operations';
+import {Operation} from '../../../operation';
 
 import {Filter} from '../services/filter/filter';
 import {FilterDay} from '../services/filter/filter-day';
 import {FilterMonth} from '../services/filter/filter-month';
 import {FilterYear} from '../services/filter/filter-year';
 import {NoFilter} from '../services/filter/no-filter';
-import {ViewModelChart} from '../view-model-chart';
+import {ViewOperationChart} from '../view-operation-chart';
 
 import {BaseChartDirective} from 'ng2-charts';
-import {TickModel} from '../tick-model';
 import {DateRange} from '../../date-range';
 import {BudgetService} from '../../budget.service';
 
@@ -39,7 +38,7 @@ const filterType = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartComponent {
-  private _bank: number = 100;
+  private _bank = 100;
 
   get bank(): number {
     return this._bank;
@@ -49,7 +48,8 @@ export class ChartComponent {
     this._bank = value;
   }
 
-  private _filterDateRange: DateRange;
+  private _filterDateRange: DateRange
+    = BudgetService.getFirstAndLastDateOfCurrentMonth(new Date());
 
   get filterDateRange(): DateRange {
     return this._filterDateRange;
@@ -60,28 +60,28 @@ export class ChartComponent {
     this.refreshDataInChart(this.currentFilter);
   }
 
-  private _operations: Operations[];
+  private _operations: Operation[];
 
-  get operations(): Operations[] {
+  get operations(): Operation[] {
     return this._operations;
   }
 
-  @Input() set operations(value: Operations[]) {
+  @Input() set operations(value: Operation[]) {
     this._operations = value;
     this.refreshDataInChart(this.currentFilter);
   }
 
   private _operationsGrouped = [];
 
-  get operationsGrouped(): Operations[] {
+  get operationsGrouped(): Operation[] {
     return this._operationsGrouped;
   }
 
-  set operationsGrouped(value: Operations[]) {
+  set operationsGrouped(value: Operation[]) {
     this._operationsGrouped = value;
   }
 
-  viewModel: ViewModelChart[];
+  viewOperations: ViewOperationChart[];
 
   chartLabels: Label[] = [];
 
@@ -100,9 +100,8 @@ export class ChartComponent {
           position: 'left',
           ticks: {
             beginAtZero: true,
-            callback: (value, index, values) => {
-              return this.chartService.numberFormat(Number(value));
-              ;
+            callback: (value) => {
+              return BudgetService.numberFormat(Number(value));
             }
           }
         },
@@ -114,9 +113,8 @@ export class ChartComponent {
           },
           ticks: {
             beginAtZero: true,
-            callback: (value, index, values) => {
-              return this.chartService.numberFormat(Number(value));
-              ;
+            callback: (value) => {
+              return BudgetService.numberFormat(Number(value));
             }
           }
         }
@@ -129,8 +127,8 @@ export class ChartComponent {
     },
     tooltips: {
       callbacks: {
-        label: (tooltipItem, data) => {
-          return this.chartService.numberFormat(Number(tooltipItem.value));
+        label: (tooltipItem) => {
+          return BudgetService.numberFormat(Number(tooltipItem.value));
         }
       }
     }
@@ -160,8 +158,6 @@ export class ChartComponent {
 
   currentFilter: Filter = new NoFilter();
 
-  noData: boolean = false;
-
   @ViewChild(BaseChartDirective) private _chart;
 
   constructor(
@@ -169,60 +165,28 @@ export class ChartComponent {
     private cashFlowService: BudgetService
   ) { }
 
-  refreshDataInChart(typeFilter: Filter) {
+  refreshDataInChart(typeFilter: Filter): void {
     if (typeof this.operations !== 'undefined') {
-      this.operationsGrouped = this.chartService.grouping(
-        this.cashFlowService.castNewObject(this.operations), typeFilter
-      );
+      this.operationsGrouped = typeFilter instanceof NoFilter ?
+        [...this.operations] : this.chartService.toGroupOperations([...this.operations], typeFilter);
+
       this.operationsGrouped = this.cashFlowService.sortByDate(this.operationsGrouped);
 
-      this.cashFlowService.calculateBalance(this.operationsGrouped, this.bank);
-
-      if (typeof this.filterDateRange === 'undefined') {
-        this.filterDateRange = this.getFirstAndLastDateOfCurrentMonth(new Date());
-      }
+      this.operationsGrouped = this.cashFlowService.calculateBalance(this.operationsGrouped, this.bank);
 
       this.operationsGrouped = this.chartService
         .filterByDate(this.operationsGrouped, this.filterDateRange);
 
-      if (this.operationsGrouped.length === 0) {
-        this.noData = true;
-        return;
-      }
+      this.viewOperations = this.chartService.castToView(this.operationsGrouped, this.currentFilter);
 
-      this.noData = false;
+      this.setDataInChart(this.viewOperations);
 
-      this.viewModel = this.chartService.castToView(this.operationsGrouped, this.currentFilter);
-
-      this.setDataInChart();
-
-      this.chartRefresh(); // it's possible not to update the chart when filtering
-
+      this.chartRefresh(this.viewOperations);
     }
   }
 
-  getFirstAndLastDateOfCurrentMonth(lastDate: Date): DateRange {
-    return new DateRange(
-      new Date(lastDate.getFullYear(), lastDate.getMonth(), 1),
-      new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0)
-    );
-  }
-
-  chartRefresh() {
-    this.setTicksToScales(
-      this.chartService.scalesCalculation(this.viewModel)
-    );
-
-    /*
-      this._chart.chart.update();
-      not working: not refresh tickets on a chart
-    * */
-    setTimeout(() => {
-      this._chart.refresh();
-    }, 0);
-  }
-
-  setTicksToScales(ticks: TickModel) {
+  chartRefresh(operations: ViewOperationChart[]): void {
+    const ticks = this.chartService.scalesCalculation(operations);
     this.chartOptions.scales.yAxes.forEach(it => {
       if (it.id === 'y-axis-0') {
         it.ticks.max = ticks.leftMax;
@@ -235,22 +199,30 @@ export class ChartComponent {
         it.ticks.stepSize = ticks.stepSizeRight;
       }
     });
+
+    /*
+      this._chart.chart.update(); =>
+      not working: not refresh tickets on a chart
+    * */
+    setTimeout(() => {
+      this._chart.refresh();
+    }, 0);
   }
 
-  setDataInChart() {
+  setDataInChart(operations: ViewOperationChart[]): void {
     this.chartData.find(it => it.label === DirectionsChart.balance)
-      .data = this.viewModel.map(it => it.balance);
+      .data = operations.map(it => it.balance);
 
     this.chartData.find(it => it.label === DirectionsChart.cashIn)
-      .data = this.viewModel.map(it => it.cashIn);
+      .data = operations.map(it => it.cashIn);
 
     this.chartData.find(it => it.label === DirectionsChart.cashOut)
-      .data = this.viewModel.map(it => it.cashOut);
+      .data = operations.map(it => it.cashOut);
 
-    this.chartLabels = this.viewModel.map(it => it.label);
+    this.chartLabels = operations.map(it => it.label);
   }
 
-  grouping(typeFilter: string) {
+  grouping(typeFilter: string): void {
     this.currentFilter = filterType[typeFilter];
     this.refreshDataInChart(this.currentFilter);
   }

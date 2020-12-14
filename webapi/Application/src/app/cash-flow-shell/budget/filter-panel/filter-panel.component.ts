@@ -2,20 +2,19 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DateRange } from '../date-range';
 import {MatDialog} from '@angular/material/dialog';
 import {DatepickerDialogComponent} from './datepicker-dialog/datepicker-dialog.component';
-import {Operations} from '../../operations';
-import {FilterPanelService} from './filter-panel.service';
+import {BudgetService} from '../budget.service';
 
 @Component({
   selector: 'app-filter-panel',
   templateUrl: './filter-panel.component.html',
   styleUrls: ['./filter-panel.component.scss']
 })
-export class FilterPanelComponent implements OnInit {
+export class FilterPanelComponent {
 
   readonly DATE_FORMAT: string = 'MMM d, y';
 
   private _filterDateRange: DateRange =
-    this.filterPanelService.getFirstAndLastDateOfCurrentMonth(new Date());
+    BudgetService.getFirstAndLastDateOfCurrentMonth(new Date());
 
   get filterDateRange(): DateRange {
     return this._filterDateRange;
@@ -29,11 +28,7 @@ export class FilterPanelComponent implements OnInit {
   @Output() enteringFilterDateRange = new EventEmitter<DateRange>();
 
   constructor(
-    public dialog: MatDialog,
-    private filterPanelService: FilterPanelService) { }
-
-  ngOnInit(): void {
-  }
+    public dialog: MatDialog) { }
 
   openDatePicker(): void {
     const dialogRef = this.dialog.open(DatepickerDialogComponent, {

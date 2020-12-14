@@ -5,6 +5,7 @@ export class DateRange {
   get startDate(): Date {
     return this._startDate;
   }
+
   set startDate(value: Date) {
     this._startDate = value;
   }
@@ -14,6 +15,7 @@ export class DateRange {
   get endDate(): Date {
     return this._endDate;
   }
+
   set endDate(value: Date) {
     this._endDate = value;
   }
@@ -21,11 +23,10 @@ export class DateRange {
   constructor(startDate?: Date, endDate?: Date) {
     this.startDate = null;
     this.endDate = null;
-
-    this.init(startDate, endDate);
+    this.initialization(startDate, endDate);
   }
 
-  private init(startDate: Date, endDate: Date) {
+  private initialization(startDate: Date, endDate: Date): void {
     if (typeof startDate !== 'undefined' && typeof endDate !== 'undefined') {
       this.startDate = startDate;
       this.endDate = endDate;

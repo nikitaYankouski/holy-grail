@@ -1,4 +1,4 @@
-export interface ViewModelChart {
+export interface ViewOperationChart {
     label: string;
     cashIn: number;
     cashOut: number;

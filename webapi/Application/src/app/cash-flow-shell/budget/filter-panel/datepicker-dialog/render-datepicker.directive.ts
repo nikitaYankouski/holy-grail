@@ -11,7 +11,7 @@ export class RenderDatepickerDirective implements OnInit {
               private elementRef: ElementRef) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.datepicker = this.elementRef.nativeElement.getElementsByClassName('md-drppicker')[0];
     this.renderer.setStyle(this.datepicker, 'box-shadow', 'unset');
   }

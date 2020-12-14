@@ -1,4 +1,4 @@
-export interface Operations {
+export interface Operation {
     id: number;
     budgetId: number;
     description: number;

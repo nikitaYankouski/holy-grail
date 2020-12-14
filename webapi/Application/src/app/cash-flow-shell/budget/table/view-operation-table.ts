@@ -1,4 +1,4 @@
-export interface ViewModelTable {
+export interface ViewOperationTable {
     id: number;
     budgetId: number;
     description: number;

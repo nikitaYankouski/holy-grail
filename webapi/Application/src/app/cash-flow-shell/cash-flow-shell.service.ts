@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { of, Observable } from "rxjs";
+import { of, Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { DbOperations } from './db-operations';
-import { Operations } from './operations';
+import { DbOperation } from './db-operation';
+import { Operation } from './operation';
 
 @Injectable({
   providedIn: 'root'
@@ -21,33 +21,32 @@ export class CashFlowShellService {
     this.myAppUrl = environment.appUrl;
   }
 
-  getOperations(): Observable<Operations[]> {
-    return this.http.get<DbOperations[]>(this.myAppUrl)
+  static castToOperation(operation: DbOperation): Operation {
+    return {
+      id: operation.id,
+      budgetId: operation.budgetId,
+      description: operation.description,
+      timestamp: new Date(operation.timestamp.substr(0, 10)),
+      cashIn: operation.isIncome ? operation.amountOfMoney : undefined,
+      cashOut: operation.isIncome ? undefined : operation.amountOfMoney,
+      balance: 0
+    };
+  }
+
+  getOperations(): Observable<Operation[]> {
+    return this.http.get<DbOperation[]>(this.myAppUrl)
     .pipe(
-      map((operations: DbOperations[]) =>
-        operations.map(operation => this.casting(operation))
+      map((operations: DbOperation[]) =>
+        operations.map(operation => CashFlowShellService.castToOperation(operation))
       ),
       catchError(this.handleError<any>('getOperations'))
     );
   }
 
-  private handleError<T>(result?: T) {
+  private handleError<T>(result?: T): (error: any) => Observable<T> {
     return (error: any): Observable<T> => {
       console.error(error);
       return of(result as T);
     };
-  }
-
-  private casting(operation: DbOperations) : Operations {
-    let model: Operations = {
-      id: operation.id,
-      budgetId: operation.budgetId,
-      description: operation.description,
-      timestamp: new Date(operation.timestamp.substr(0,10)),
-      cashIn: operation.isIncome ? operation.amountOfMoney : undefined,
-      cashOut: operation.isIncome ? undefined : operation.amountOfMoney,
-      balance: 0
-    }
-    return model;
   }
 }
