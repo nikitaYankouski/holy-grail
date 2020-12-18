@@ -32,8 +32,8 @@ export class FilterPanelComponent {
 
   openDatePicker(): void {
     const dialogRef = this.dialog.open(DatepickerDialogComponent, {
-      width: '55%',
-      height: '58%',
+      width: '830px',
+      height: '430px',
       backdropClass: 'backdropBackground',
       hasBackdrop: true,
       position: {

@@ -3,39 +3,45 @@
     <div class="input">
       <mat-form-field appearance="outline">
         <mat-label>From:</mat-label>
-        <input matInput type="text" autocomplete="off" [(ngModel)]="viewInputStart">
+        <input matInput #inputDateStart type="text" autocomplete="off" [value]="viewInputStart"
+               (input)="enteringStartDateFromInput(inputDateStart.value)">
       </mat-form-field>
     </div>
     <div class="input">
       <mat-form-field appearance="outline">
         <mat-label>To:</mat-label>
-        <input matInput type="text" autocomplete="off" [(ngModel)]="viewInputEnd">
+        <input matInput #inputDateEnd type="text" autocomplete="off" [value]="viewInputEnd"
+               (input)="enteringEndDateFromInput(inputDateEnd.value)">
       </mat-form-field>
     </div>
   </div>
 
   <div class="datepicker-panel">
     <div class="datepicker" appRenderDatepicker>
-      <ngx-daterangepicker-material (choosedDate)="setDataRange($event)" [startDate]="selected.startDate"
-                                    [endDate]="selected.endDate" [autoApply]="true"
-                                    (startDateChanged)="setStartDate($event)" (endDateChanged)="setEndDate($event)">
+      <ngx-daterangepicker-material (choosedDate)="selectDataRange($event)" [autoApply]="true"
+                                    [startDate]="selectedRange.startDate" [endDate]="selectedRange.endDate"
+                                    (startDateChanged)="selectOnCalendarStartDate($event)"
+                                    (endDateChanged)="selectOnCalendarEndDate($event)"
+                                    customRangeDirection="false"
+                                    [locale]="{firstDay: 1}">
       </ngx-daterangepicker-material>
     </div>
     <div class="datepicker">
       <div class="datepicker-month">
-        <button mat-button class="button-month" (click)="chooseMonth('Last')"
-                [ngClass]="{'button-month-selected': month === 'Last'}">Last</button>
-        <button mat-button class="button-month" (click)="chooseMonth('Current')"
-                [ngClass]="{'button-month-selected': month === 'Current'}">Current</button>
-        <button mat-button class="button-month" (click)="chooseMonth('Next')"
-                [ngClass]="{'button-month-selected': month === 'Next'}">Next</button>
+        <button mat-button class="button-month" (click)="chooseDirectionTime('Last')"
+                [ngClass]="{'button-month-selected': nameDirection === 'Last'}">Last</button>
+        <button mat-button class="button-month" (click)="chooseDirectionTime('Current')"
+                [ngClass]="{'button-month-selected': nameDirection === 'Current'}">Current</button>
+        <button mat-button class="button-month" (click)="chooseDirectionTime('Next')"
+                [ngClass]="{'button-month-selected': nameDirection === 'Next'}">Next</button>
       </div>
       <div class="datepicker-range">
-        <button mat-button>Week</button>
+        <button mat-button (click)="choosePeriod('Week')"
+                [ngClass]="{'button-period-selected': namePeriod === 'Week'}">Week</button>
         <button mat-button (click)="choosePeriod('Month')"
-                [ngClass]="{'button-period-selected': month === 'Last'
-                || month === 'Current' || month === 'Next'}">Month</button>
-        <button mat-button>Quarter</button>
+                [ngClass]="{'button-period-selected': namePeriod === 'Month'}">Month</button>
+        <button mat-button (click)="choosePeriod('Quarter')"
+                [ngClass]="{'button-period-selected': namePeriod === 'Quarter'}">Quarter</button>
       </div>
     </div>
   </div>
@@ -45,7 +51,7 @@
       <button mat-flat-button (click)="closeDatepicker('close')">Cancel</button>
     </div>
     <div class="button">
-      <button mat-flat-button color="primary" (click)="closeDatepicker()">Apply</button>
+      <button mat-flat-button color="primary" (click)="closeDatepicker('aaa')">Apply</button>
     </div>
   </div>
 </div>

@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatGridListModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatTabsModule
   ],
   exports: [
     CommonModule,
@@ -49,6 +51,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatDialogModule,
     MatToolbarModule,
     MatGridListModule,
+    MatTabsModule
   ]
 })
 export class MaterialModule { }
