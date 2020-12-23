@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DateRange } from '../date-range';
 import {MatDialog} from '@angular/material/dialog';
 import {DatepickerDialogComponent} from './datepicker-dialog/datepicker-dialog.component';

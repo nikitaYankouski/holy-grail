@@ -162,7 +162,7 @@ export class ChartComponent {
 
   constructor(
     private chartService: ChartService,
-    private cashFlowService: BudgetService
+    private budgetService: BudgetService
   ) { }
 
   refreshDataInChart(typeFilter: Filter): void {
@@ -170,12 +170,11 @@ export class ChartComponent {
       this.operationsGrouped = typeFilter instanceof NoFilter ?
         [...this.operations] : this.chartService.toGroupOperations([...this.operations], typeFilter);
 
-      this.operationsGrouped = this.cashFlowService.sortByDate(this.operationsGrouped);
+      this.operationsGrouped = this.budgetService.sortByDate(this.operationsGrouped);
 
-      this.operationsGrouped = this.cashFlowService.calculateBalance(this.operationsGrouped, this.bank);
+      this.operationsGrouped = this.budgetService.calculateBalance(this.operationsGrouped, this.bank);
 
-      this.operationsGrouped = this.chartService
-        .filterByDate(this.operationsGrouped, this.filterDateRange);
+      this.operationsGrouped = BudgetService.filterByDate(this.operationsGrouped, this.filterDateRange);
 
       this.viewOperations = this.chartService.castToView(this.operationsGrouped, this.currentFilter);
 

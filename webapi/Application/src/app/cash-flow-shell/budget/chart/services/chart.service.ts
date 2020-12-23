@@ -5,7 +5,6 @@ import {ScalingCalculations} from '../scaling-calculations';
 import {TickModel} from '../tick-model';
 import {ViewOperationChart} from '../view-operation-chart';
 import {Filter} from './filter/filter';
-import {DateRange} from '../../date-range';
 import {BudgetService} from '../../budget.service';
 
 @Injectable({
@@ -87,11 +86,6 @@ export class ChartService {
       }
       return operation;
     });
-  }
-
-  filterByDate(operations: Operation[], filter: DateRange): Operation[] {
-    return operations.filter(operation =>
-      operation.timestamp >= filter.startDate && operation.timestamp <= filter.endDate);
   }
 
   convertDateToString(date: Date, filter: Filter): string {

@@ -9,6 +9,7 @@ import { Operation } from '../../../operation';
 import { ViewOperationTable } from '../view-operation-table';
 import { DatePipe } from '@angular/common';
 import { BudgetService } from '../../budget.service';
+import {DateRange} from '../../date-range';
 
 @Component({
   selector: 'app-table',
@@ -36,6 +37,17 @@ export class TableComponent {
     this._operations = value;
   }
 
+  private _filterDateRange: DateRange
+    = BudgetService.getFirstAndLastDateOfCurrentMonth(new Date());
+
+  get filterDateRange(): DateRange {
+    return this._filterDateRange;
+  }
+
+  @Input() set filterDateRange(value: DateRange) {
+    this._filterDateRange = value;
+  }
+
   dataSource = new MatTableDataSource<ViewOperationTable>();
 
   @Output() operationsChart = new EventEmitter<Operation[]>();
@@ -52,13 +64,13 @@ export class TableComponent {
 
   constructor(
     private tableService: TableService,
-    private cashFlowService: BudgetService,
+    private budgetService: BudgetService,
     public datePipe: DatePipe
   ) { }
 
   getOperations(): void {
-    this.cashFlowService.getOperations();
-    this.cashFlowService.dataOutput.subscribe(operations => {
+    this.budgetService.getOperations();
+    this.budgetService.dataOutput.subscribe(operations => {
       this.operations = operations;
       this.refreshData();
     });
@@ -76,7 +88,7 @@ export class TableComponent {
 
   calculateBalance(operations: Operation[]): Operation[] {
     if ((typeof this.bank !== 'undefined') && (typeof this.bank !== 'string')) {
-      return this.cashFlowService.calculateBalance(operations, this.bank);
+      return this.budgetService.calculateBalance(operations, this.bank);
     }
   }
 

@@ -75,7 +75,6 @@ export class DatepickerDialogComponent implements OnInit {
       this.namePeriod = null;
       this.nameDirection = null;
     }
-    console.log('!!');
   }
 
   selectOnCalendarEndDate(date): void {

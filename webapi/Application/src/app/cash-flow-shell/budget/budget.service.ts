@@ -39,6 +39,11 @@ export class BudgetService {
     );
   }
 
+  static filterByDate(operations: Operation[], filter: DateRange): Operation[] {
+    return operations.filter(operation =>
+      operation.timestamp >= filter.startDate && operation.timestamp <= filter.endDate);
+  }
+
   getOperations(): void {
     this.budgetApi.getOperations().subscribe(operations => {
       this.dataSource.next(operations);
