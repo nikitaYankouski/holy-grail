@@ -94,9 +94,9 @@ export class TableComponent {
 
   onDrop(event: CdkDragDrop<string[]>): void {
     moveItemInArray(this.operations, event.previousIndex, event.currentIndex);
-    this.operations.forEach((operation, idx) => {
+    /*this.operations.forEach((operation, idx) => {
       operation.id = idx + 1;
-    });
+    });*/
 
     if (event.currentIndex !== event.previousIndex) {
       this.tableService.timeChange(this.operations, event.currentIndex);
@@ -107,7 +107,8 @@ export class TableComponent {
   refreshData(): void {
     this.calculateBalance(this.operations);
     this.dataSource.data = this.tableService.castToViewModel(this.operations);
-    this.operationsChart.emit([...this.operations]);
+    console.log(this.operations);
+    //this.operationsChart.emit([...this.operations]);
   }
 
   inputBank(): void {
