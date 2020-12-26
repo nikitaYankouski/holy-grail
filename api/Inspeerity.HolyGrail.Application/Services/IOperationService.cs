@@ -6,6 +6,7 @@
 
 namespace Inspeerity.HolyGrail.Application.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -15,6 +16,14 @@ namespace Inspeerity.HolyGrail.Application.Services
     {
         Task<List<OperationDTO>> GetAllOperations();
 
+        Task<List<OperationDTO>> GetOperationsByDate(DateTime fromDate, DateTime toDate);
+
         Task AddOperation(OperationDTO operation);
+
+        Task UpdateOperation(OperationDTO operation);
+
+        Task<int> DeleteOperation(int id);
+
+        Task<bool> AnyOperationById(int id);
     }
 }

@@ -6,6 +6,7 @@
 
 namespace Inspeerity.HolyGrail.Core.Repositories
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -15,6 +16,14 @@ namespace Inspeerity.HolyGrail.Core.Repositories
     {
         Task<List<Operation>> GetOperationsAsync();
 
+        Task<List<Operation>> GetOperationsByDate(DateTime fromDate, DateTime toDate);
+
         Task AddOperationAsync(Operation operation);
+
+        Task UpdateOperation(Operation operation);
+
+        Task<int> DeleteOperation(int id);
+
+        Task<bool> AnyOperationById(int id);
     }
 }
