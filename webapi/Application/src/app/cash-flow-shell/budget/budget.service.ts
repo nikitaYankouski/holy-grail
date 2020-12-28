@@ -13,7 +13,7 @@ export class BudgetService {
 
   dataOutput = this.dataSource.asObservable();
 
-  constructor(private budgetApi: CashFlowShellService) {
+  constructor(private cashFlowShellApi: CashFlowShellService) {
   }
 
   static toZero<T>(value: T): number {
@@ -45,7 +45,7 @@ export class BudgetService {
   }
 
   getOperations(): void {
-    this.budgetApi.getOperations().subscribe(operations => {
+    this.cashFlowShellApi.getOperations().subscribe(operations => {
       this.dataSource.next(operations);
     });
   }
