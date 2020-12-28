@@ -24,8 +24,11 @@ export class CashFlowShellService {
     this.apiUrl = environment.appUrl;
   }
 
-  getOperations(): Observable<Operation[]> {
-    return this.http.get<DbOperation[]>(this.apiUrl)
+  getOperations(fromDate: Date, toDate: Date): Observable<Operation[]> {
+    const options = { params: new HttpHeaders().set('fromDate').set('toDate') };
+    const apiUrlGetByDate = this.apiUrl + '/' + fromDate + '/' + toDate;
+
+    return this.http.get<DbOperation[]>(apiUrlGetByDate, options)
       .pipe(
         map((operations: DbOperation[]) =>
           operations.map(operation => this.castService.castToOperation(operation))
@@ -51,8 +54,10 @@ export class CashFlowShellService {
   }
 
   deleteOperation(id: number): Observable<{}> {
+    const options = { params: new HttpHeaders().set('id') };
     const apiUrlDelete = this.apiUrl + '/' + id;
-    return this.http.delete<DbOperation>(this.apiUrl)
+
+    return this.http.delete<DbOperation>(apiUrlDelete, options)
       .pipe(
         catchError(this.handleError<any>('deleteOperation'))
       );
