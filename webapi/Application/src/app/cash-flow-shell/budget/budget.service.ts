@@ -44,8 +44,8 @@ export class BudgetService {
       operation.timestamp >= filter.startDate && operation.timestamp <= filter.endDate);
   }
 
-  getOperations(): void {
-    this.cashFlowShellApi.getOperations().subscribe(operations => {
+  getOperations(filter: DateRange): void {
+    this.cashFlowShellApi.getOperations(filter).subscribe(operations => {
       this.dataSource.next(operations);
     });
   }

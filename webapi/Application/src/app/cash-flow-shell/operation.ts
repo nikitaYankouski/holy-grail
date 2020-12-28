@@ -1,7 +1,7 @@
 export interface Operation {
     id: number;
     budgetId: number;
-    description: number;
+    description: string;
     timestamp: Date;
     cashIn: number;
     cashOut: number;

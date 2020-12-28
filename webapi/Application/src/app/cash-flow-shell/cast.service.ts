@@ -28,12 +28,16 @@ export class CastService {
 
   castToDbOperation(operation: Operation): DbOperation {
     return {
-      id: 0,
+      id: operation.id === 0 ? 0 : operation.id,
       budgetId: operation.budgetId,
       description: operation.description,
       isIncome: typeof operation.cashIn !== null,
-      timestamp: this.datePipe.transform(operation.timestamp, DATE_FORMAT),
+      timestamp: this.castDateTimeToFormat(operation.timestamp),
       amountOfMoney: typeof operation.cashIn !== null ? operation.cashIn : operation.cashOut
     };
+  }
+
+  castDateTimeToFormat(date: Date): string {
+    return this.datePipe.transform(date, DATE_FORMAT);
   }
 }

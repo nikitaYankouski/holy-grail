@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
 import {of, Observable} from 'rxjs';
@@ -7,6 +7,7 @@ import {catchError, map} from 'rxjs/operators';
 import {DbOperation} from './db-operation';
 import {Operation} from './operation';
 import {CastService} from './cast.service';
+import {DateRange} from './budget/date-range';
 
 @Injectable({
   providedIn: 'root'
@@ -24,11 +25,12 @@ export class CashFlowShellService {
     this.apiUrl = environment.appUrl;
   }
 
-  getOperations(fromDate: Date, toDate: Date): Observable<Operation[]> {
-    const options = { params: new HttpHeaders().set('fromDate').set('toDate') };
-    const apiUrlGetByDate = this.apiUrl + '/' + fromDate + '/' + toDate;
+  getOperations(filter: DateRange): Observable<Operation[]> {
+    const startDate = this.castService.castDateTimeToFormat(filter.startDate);
+    const endDate = this.castService.castDateTimeToFormat(filter.endDate);
+    const options = {params: new HttpParams().set('fromDate', startDate).set('toDate', endDate)};
 
-    return this.http.get<DbOperation[]>(apiUrlGetByDate, options)
+    return this.http.get<DbOperation[]>(this.apiUrl, options)
       .pipe(
         map((operations: DbOperation[]) =>
           operations.map(operation => this.castService.castToOperation(operation))
@@ -54,10 +56,8 @@ export class CashFlowShellService {
   }
 
   deleteOperation(id: number): Observable<{}> {
-    const options = { params: new HttpHeaders().set('id') };
-    const apiUrlDelete = this.apiUrl + '/' + id;
-
-    return this.http.delete<DbOperation>(apiUrlDelete, options)
+    const options = { params: new HttpParams().set('id', String(id)) };
+    return this.http.delete<DbOperation>(this.apiUrl, options)
       .pipe(
         catchError(this.handleError<any>('deleteOperation'))
       );
