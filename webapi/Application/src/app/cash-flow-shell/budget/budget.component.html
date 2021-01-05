@@ -1,7 +1,6 @@
-<app-filter-panel (enteringFilterDateRange)="refreshFilterDateRange($event)"></app-filter-panel>
+<app-filter-panel (enteringFilterDateRange)="refreshOperationsByFilter($event)"></app-filter-panel>
 
-<app-chart [operations]="operationsBuffer" [bank]="enteringBank"
-           [filterDateRange]="filterDateRangeBuffer"></app-chart>
+<app-views [enteredFilteredOperationsByDate]="enteringOperationsByFilter"
+           [enteredOperationCRUD]="enteringOperationCRUD"
+           [bank]="enteringBank" (editedOperation)="updateOperation($event)"></app-views>
 
-<app-table [bank]="enteringBank" [filterDateRange]="filterDateRangeBuffer"
-           (operationsChart)="refreshOperations($event)"></app-table>

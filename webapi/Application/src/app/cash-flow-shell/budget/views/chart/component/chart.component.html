@@ -1,0 +1,16 @@
+<div class="container">
+  <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors"
+          [options]="chartOptions" [plugins]="chartPlugins" [legend]="chartLegend" [chartType]="chartType">
+  </canvas>
+</div>
+
+<div class="container button-row">
+  <button mat-raised-button class="button" (click)="chooseGroupFilter('noFilter')"
+          [ngClass]="{'button-selected': currentGroupFilter.name === 'noFilter'}">No grouping</button>
+  <button mat-raised-button class="button" (click)="chooseGroupFilter('day')"
+          [ngClass]="{'button-selected': currentGroupFilter.name === 'day'}">Day</button>
+  <button mat-raised-button class="button" (click)="chooseGroupFilter('month')"
+          [ngClass]="{'button-selected': currentGroupFilter.name === 'month'}">Month</button>
+  <button mat-raised-button class="button" (click)="chooseGroupFilter('year')"
+          [ngClass]="{'button-selected': currentGroupFilter.name === 'year'}">Year</button>
+</div>

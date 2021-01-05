@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {Operation} from '../operation';
 import {DateRange} from './date-range';
 import {ActivatedRoute} from '@angular/router';
+import {BudgetService} from './budget.service';
+import {CrudOperation} from './crud-operation';
 
 @Component({
   selector: 'app-budget',
@@ -12,13 +14,13 @@ export class BudgetComponent implements OnInit {
 
   enteringBank = 0;
 
-  operationsBuffer: Operation[];
+  enteringOperationsByFilter: Operation[];
 
-  filterDateRangeBuffer: DateRange;
+  enteringOperationCRUD: CrudOperation;
 
   constructor(
-    private route: ActivatedRoute) {
-  }
+    private route: ActivatedRoute,
+    private budgetService: BudgetService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -26,11 +28,18 @@ export class BudgetComponent implements OnInit {
     });
   }
 
-  refreshFilterDateRange(filterDateRange: DateRange): void {
-    this.filterDateRangeBuffer = filterDateRange;
+  refreshOperationsByFilter(filterDateRange: DateRange): void {
+    this.budgetService.getOperations(filterDateRange);
+    this.budgetService.operations.subscribe(operations => {
+      this.enteringOperationsByFilter = operations.length !== 0 ? operations : undefined;
+    });
   }
 
-  refreshOperations(operations: Operation[]): void {
-    this.operationsBuffer = operations;
+  updateOperation(operation: Operation): void {
+    this.budgetService.updateOperation(operation);
+    this.enteringOperationCRUD = {
+      type: 'update',
+      operation: operation
+    };
   }
 }

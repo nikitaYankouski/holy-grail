@@ -1,0 +1,14 @@
+<div *ngIf="this.enteredFilteredOperationsByDate; else noExistsData">
+  <app-chart [filteredOperationsByDate]="enteredFilteredOperationsByDate" [bank]="bank"
+             [operationCRUD]="enteredOperationCRUD"></app-chart>
+
+  <app-table [operations]="enteredFilteredOperationsByDate" [bank]="bank"
+             (updatedOperation)="enterOperation($event)"></app-table>
+</div>
+
+<ng-template #noExistsData>
+  <div class="no-data">
+    <mat-icon>error</mat-icon>
+    Data not found
+  </div>
+</ng-template>

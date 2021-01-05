@@ -1,8 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { Operation } from '../../../operation';
+import { Operation } from '../../../../operation';
 import { ViewOperationTable } from '../view-operation-table';
-import {BudgetService} from '../../budget.service';
+import {BudgetService} from '../../../budget.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +23,8 @@ export class TableService {
   }
 
   timeChange(operations: Operation[], currentIndex: number): void {
-    const operationSwitchTime = operations.find(operation => (operation.id === currentIndex + 1));
-    operationSwitchTime.timestamp = this.getTimeStamp(
-      operations, currentIndex === 0 ? currentIndex + 2 : currentIndex
-    );
+    const operationSwitchTime = operations[currentIndex];
+    operationSwitchTime.timestamp = operations[currentIndex === 0 ? currentIndex + 1 : currentIndex - 1].timestamp;
   }
 
   castToViewModel(operations: Operation[]): ViewOperationTable[] {
@@ -61,9 +59,5 @@ export class TableService {
         balance: TableService.castIntlToNumber(viewModel.balance)
       };
     });
-  }
-
-  private getTimeStamp(operations: Operation[], indexInTable: number): Date {
-    return operations.find(operation => operation.id === indexInTable).timestamp;
   }
 }

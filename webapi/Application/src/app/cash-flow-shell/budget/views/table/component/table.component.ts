@@ -1,15 +1,14 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { TableService } from '../services/table.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Operation } from '../../../operation';
+import { Operation } from '../../../../operation';
 import { ViewOperationTable } from '../view-operation-table';
 import { DatePipe } from '@angular/common';
-import { BudgetService } from '../../budget.service';
-import {DateRange} from '../../date-range';
+import { BudgetService } from '../../../budget.service';
 
 @Component({
   selector: 'app-table',
@@ -17,7 +16,7 @@ import {DateRange} from '../../date-range';
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent {
-  private _bank = 100;
+  private _bank;
 
   get bank(): number {
     return this._bank;
@@ -25,7 +24,7 @@ export class TableComponent {
 
   @Input() set bank(value: number) {
     this._bank = value;
-    this.inputBank();
+    this.refreshDataInTable();
   }
 
   private _operations: Operation[];
@@ -33,26 +32,17 @@ export class TableComponent {
   get operations(): Operation[] {
     return this._operations;
   }
-  set operations(value: Operation[]) {
+
+  @Input() set operations(value: Operation[]) {
     this._operations = value;
+    this.refreshDataInTable();
   }
-
-  private _filterDateRange: DateRange
-    = BudgetService.getFirstAndLastDateOfCurrentMonth(new Date());
-
-  get filterDateRange(): DateRange {
-    return this._filterDateRange;
-  }
-
-  @Input() set filterDateRange(value: DateRange) {
-    this._filterDateRange = value;
-  }
-
-  dataSource = new MatTableDataSource<ViewOperationTable>();
-
-  @Output() operationsChart = new EventEmitter<Operation[]>();
 
   @ViewChild(MatSort) sort: MatSort;
+
+  @Output() updatedOperation = new EventEmitter<Operation>();
+
+  dataSource = new MatTableDataSource<ViewOperationTable>();
 
   displayedColumns: string[] = [
     'description',
@@ -68,12 +58,11 @@ export class TableComponent {
     public datePipe: DatePipe
   ) { }
 
-  getOperations(): void {
-    this.budgetService.getOperations();
-    this.budgetService.dataOutput.subscribe(operations => {
-      this.operations = operations;
-      this.refreshData();
-    });
+  refreshDataInTable(): void {
+    if (typeof this.operations !== 'undefined') {
+      this.calculateBalance(this.operations);
+      this.dataSource.data = this.tableService.castToViewModel(this.operations);
+    }
   }
 
   sortData(): void {
@@ -82,6 +71,7 @@ export class TableComponent {
       this.operations = this.tableService.castToOperations(elements);
     });
 
+    /*this.refreshData();*/
     this.calculateBalance(this.operations);
     this.dataSource.data = this.tableService.castToViewModel(this.operations);
   }
@@ -94,29 +84,10 @@ export class TableComponent {
 
   onDrop(event: CdkDragDrop<string[]>): void {
     moveItemInArray(this.operations, event.previousIndex, event.currentIndex);
-    /*this.operations.forEach((operation, idx) => {
-      operation.id = idx + 1;
-    });*/
-
     if (event.currentIndex !== event.previousIndex) {
       this.tableService.timeChange(this.operations, event.currentIndex);
-      this.refreshData();
-    }
-  }
-
-  refreshData(): void {
-    this.calculateBalance(this.operations);
-    this.dataSource.data = this.tableService.castToViewModel(this.operations);
-    console.log(this.operations);
-    //this.operationsChart.emit([...this.operations]);
-  }
-
-  inputBank(): void {
-    if (typeof this.operations === 'undefined') {
-      this.getOperations();
-    }
-    else {
-      this.refreshData();
+      this.refreshDataInTable();
+      this.updatedOperation.emit(this.operations[event.currentIndex]);
     }
   }
 }

@@ -31,9 +31,9 @@ export class CastService {
       id: operation.id === 0 ? 0 : operation.id,
       budgetId: operation.budgetId,
       description: operation.description,
-      isIncome: typeof operation.cashIn !== null,
+      isIncome: typeof operation.cashIn !== 'undefined',
       timestamp: this.castDateTimeToFormat(operation.timestamp),
-      amountOfMoney: typeof operation.cashIn !== null ? operation.cashIn : operation.cashOut
+      amountOfMoney: typeof operation.cashIn !== 'undefined' ? operation.cashIn : operation.cashOut
     };
   }
 

@@ -1,11 +1,11 @@
 import {DatePipe} from '@angular/common';
 import {Injectable} from '@angular/core';
-import {Operation} from '../../../operation';
+import {Operation} from '../../../../operation';
 import {ScalingCalculations} from '../scaling-calculations';
 import {TickModel} from '../tick-model';
 import {ViewOperationChart} from '../view-operation-chart';
 import {Filter} from './filter/filter';
-import {BudgetService} from '../../budget.service';
+import {BudgetService} from '../../../budget.service';
 
 @Injectable({
   providedIn: 'root'
@@ -85,7 +85,11 @@ export class ChartService {
         nextIndex++;
       }
       return operation;
-    });
+    }).filter(operation => operation);
+  }
+
+  castToNewArray(operations: Operation[]): Operation[] {
+    return operations.map(operation => { return {...operation}; });
   }
 
   convertDateToString(date: Date, filter: Filter): string {

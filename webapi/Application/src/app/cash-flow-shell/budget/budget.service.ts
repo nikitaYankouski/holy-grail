@@ -9,12 +9,11 @@ import {DateRange} from './date-range';
 })
 export class BudgetService {
 
-  private dataSource = new Subject<Operation[]>();
+  private operationsSource = new Subject<Operation[]>();
 
-  dataOutput = this.dataSource.asObservable();
+  operations = this.operationsSource.asObservable();
 
-  constructor(private cashFlowShellApi: CashFlowShellService) {
-  }
+  constructor(private cashFlowShellApi: CashFlowShellService) { }
 
   static toZero<T>(value: T): number {
     return typeof undefined === typeof (value) ? 0 : Number(value);
@@ -32,22 +31,14 @@ export class BudgetService {
     ).format(value);
   }
 
-  static getFirstAndLastDateOfCurrentMonth(lastDate: Date): DateRange {
-    return new DateRange(
-      new Date(lastDate.getFullYear(), lastDate.getMonth(), 1),
-      new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 0)
-    );
-  }
-
-  static filterByDate(operations: Operation[], filter: DateRange): Operation[] {
-    return operations.filter(operation =>
-      operation.timestamp >= filter.startDate && operation.timestamp <= filter.endDate);
-  }
-
   getOperations(filter: DateRange): void {
-    this.cashFlowShellApi.getOperations(filter).subscribe(operations => {
-      this.dataSource.next(operations);
+    this.cashFlowShellApi.getOperations(filter).subscribe(params => {
+      this.operationsSource.next(params);
     });
+  }
+
+  updateOperation(operation: Operation): void {
+    this.cashFlowShellApi.updateOperation(operation).subscribe();
   }
 
   sortByDate(models: Operation[]): Operation[] {

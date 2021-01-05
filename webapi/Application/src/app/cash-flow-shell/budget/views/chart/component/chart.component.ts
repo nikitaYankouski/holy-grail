@@ -5,7 +5,7 @@ import {Color, Label} from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
 import {ChartService} from '../services/chart.service';
-import {Operation} from '../../../operation';
+import {Operation} from '../../../../operation';
 
 import {Filter} from '../services/filter/filter';
 import {FilterDay} from '../services/filter/filter-day';
@@ -15,8 +15,8 @@ import {NoFilter} from '../services/filter/no-filter';
 import {ViewOperationChart} from '../view-operation-chart';
 
 import {BaseChartDirective} from 'ng2-charts';
-import {DateRange} from '../../date-range';
-import {BudgetService} from '../../budget.service';
+import {BudgetService} from '../../../budget.service';
+import {CrudOperation} from '../../../crud-operation';
 
 enum DirectionsChart {
   balance = 'BALANCE',
@@ -31,6 +31,12 @@ const filterType = {
   noFilter: new NoFilter()
 };
 
+const crudType = {
+  create: 'create',
+  update: 'update',
+  delete: 'delete'
+};
+
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -38,7 +44,8 @@ const filterType = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartComponent {
-  private _bank = 100;
+
+  private _bank = 0;
 
   get bank(): number {
     return this._bank;
@@ -48,38 +55,29 @@ export class ChartComponent {
     this._bank = value;
   }
 
-  private _filterDateRange: DateRange
-    = BudgetService.getFirstAndLastDateOfCurrentMonth(new Date());
+  private _filteredOperationsByDate: Operation[];
 
-  get filterDateRange(): DateRange {
-    return this._filterDateRange;
+  get filteredOperationsByDate(): Operation[] {
+    return this._filteredOperationsByDate;
   }
 
-  @Input() set filterDateRange(value: DateRange) {
-    this._filterDateRange = value;
-    this.refreshDataInChart(this.currentFilter);
+  @Input() set filteredOperationsByDate(value: Operation[]) {
+    this._filteredOperationsByDate = value;
+    this.refreshDataInChart(this.currentGroupFilter);
   }
 
-  private _operations: Operation[];
+  private _operationCRUD: CrudOperation;
 
-  get operations(): Operation[] {
-    return this._operations;
+  get operationCRUD() {
+    return this._operationCRUD;
   }
 
-  @Input() set operations(value: Operation[]) {
-    this._operations = value;
-    this.refreshDataInChart(this.currentFilter);
+  @Input() set operationCRUD(value: CrudOperation) {
+    this._operationCRUD = value;
+    this.crud(this.operationCRUD);
   }
 
-  private _operationsGrouped = [];
-
-  get operationsGrouped(): Operation[] {
-    return this._operationsGrouped;
-  }
-
-  set operationsGrouped(value: Operation[]) {
-    this._operationsGrouped = value;
-  }
+  groupedOperations: Operation[];
 
   viewOperations: ViewOperationChart[];
 
@@ -156,7 +154,7 @@ export class ChartComponent {
     }
   ];
 
-  currentFilter: Filter = new NoFilter();
+  currentGroupFilter: Filter = new NoFilter();
 
   @ViewChild(BaseChartDirective) private _chart;
 
@@ -165,23 +163,55 @@ export class ChartComponent {
     private budgetService: BudgetService
   ) { }
 
-  refreshDataInChart(typeFilter: Filter): void {
-    if (typeof this.operations !== 'undefined') {
-      this.operationsGrouped = typeFilter instanceof NoFilter ?
-        [...this.operations] : this.chartService.toGroupOperations([...this.operations], typeFilter);
+  refreshDataInChart(typeGroupFilter: Filter): void {
+    if (typeof this.filteredOperationsByDate !== 'undefined') {
+      this.groupedOperations = typeGroupFilter instanceof NoFilter ?
+        this.chartService.castToNewArray(this.filteredOperationsByDate) :
+        this.chartService.toGroupOperations(
+          this.chartService.castToNewArray(this.filteredOperationsByDate), typeGroupFilter
+        );
 
-      this.operationsGrouped = this.budgetService.sortByDate(this.operationsGrouped);
+      this.groupedOperations = this.budgetService.sortByDate(this.groupedOperations);
 
-      this.operationsGrouped = this.budgetService.calculateBalance(this.operationsGrouped, this.bank);
+      this.groupedOperations = this.budgetService.calculateBalance(this.groupedOperations, this.bank);
 
-      this.operationsGrouped = BudgetService.filterByDate(this.operationsGrouped, this.filterDateRange);
-
-      this.viewOperations = this.chartService.castToView(this.operationsGrouped, this.currentFilter);
+      this.viewOperations = this.chartService.castToView(this.groupedOperations, this.currentGroupFilter);
 
       this.setDataInChart(this.viewOperations);
 
       this.chartRefresh(this.viewOperations);
     }
+  }
+
+  crud(crudOperation: CrudOperation): void {
+    if (typeof crudOperation !== 'undefined') {
+      if (crudOperation.type === crudType.update) {
+        this.filteredOperationsByDate.forEach(operation => {
+          if (operation.id === crudOperation.operation.id) {
+            operation = crudOperation.operation;
+          }
+        });
+      }
+    }
+    this.refreshDataInChart(this.currentGroupFilter);
+  }
+
+  chooseGroupFilter(groupFilter: string): void {
+    this.currentGroupFilter = filterType[groupFilter];
+    this.refreshDataInChart(this.currentGroupFilter);
+  }
+
+  setDataInChart(operations: ViewOperationChart[]): void {
+    this.chartData.find(it => it.label === DirectionsChart.balance)
+      .data = operations.map(it => it.balance);
+
+    this.chartData.find(it => it.label === DirectionsChart.cashIn)
+      .data = operations.map(it => it.cashIn);
+
+    this.chartData.find(it => it.label === DirectionsChart.cashOut)
+      .data = operations.map(it => it.cashOut);
+
+    this.chartLabels = operations.map(it => it.label);
   }
 
   chartRefresh(operations: ViewOperationChart[]): void {
@@ -206,23 +236,5 @@ export class ChartComponent {
     setTimeout(() => {
       this._chart.refresh();
     }, 0);
-  }
-
-  setDataInChart(operations: ViewOperationChart[]): void {
-    this.chartData.find(it => it.label === DirectionsChart.balance)
-      .data = operations.map(it => it.balance);
-
-    this.chartData.find(it => it.label === DirectionsChart.cashIn)
-      .data = operations.map(it => it.cashIn);
-
-    this.chartData.find(it => it.label === DirectionsChart.cashOut)
-      .data = operations.map(it => it.cashOut);
-
-    this.chartLabels = operations.map(it => it.label);
-  }
-
-  grouping(typeFilter: string): void {
-    this.currentFilter = filterType[typeFilter];
-    this.refreshDataInChart(this.currentFilter);
   }
 }
