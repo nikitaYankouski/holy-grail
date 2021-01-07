@@ -35,11 +35,21 @@ export class BudgetComponent implements OnInit {
     });
   }
 
-  updateOperation(operation: Operation): void {
-    this.budgetService.updateOperation(operation);
-    this.enteringOperationCRUD = {
-      type: 'update',
-      operation: operation
-    };
+  updateOperation(crudOperation: CrudOperation): void {
+    if (crudOperation.type === 'update') {
+      this.budgetService.updateOperation(crudOperation.operation);
+      this.enteringOperationCRUD = {
+        type: crudOperation.type,
+        operation: crudOperation.operation
+      };
+    }
+
+    if (crudOperation.type === 'delete') {
+      this.budgetService.deleteOperation(crudOperation.operation.id);
+      this.enteringOperationCRUD = {
+        type: crudOperation.type,
+        operation: crudOperation.operation
+      }
+    }
   }
 }

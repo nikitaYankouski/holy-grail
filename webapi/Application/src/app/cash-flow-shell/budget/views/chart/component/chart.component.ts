@@ -192,6 +192,11 @@ export class ChartComponent {
           }
         });
       }
+
+      if (crudOperation.type === crudType.delete) {
+        this.filteredOperationsByDate = this.filteredOperationsByDate
+          .filter(operation => operation.id !== crudOperation.operation.id);
+      }
     }
     this.refreshDataInChart(this.currentGroupFilter);
   }

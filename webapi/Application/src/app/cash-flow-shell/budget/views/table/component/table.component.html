@@ -34,10 +34,16 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag cdkDragLockAxis="y" class="tr"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" cdkDrag cdkDragLockAxis="y" class="tr" (contextmenu)="open($event, row)" ></tr>
 
   </table>
 </div>
+
+<ng-template #userMenu let-operation>
+  <section class="user-menu">
+    <div (click)="deleteOperation(operation)">Delete</div>
+  </section>
+</ng-template>
 
 <ng-template #dragHandleTmpl> <!-- !!! -->
 	<svg class="bi bi-list handle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"

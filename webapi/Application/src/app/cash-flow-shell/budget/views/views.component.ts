@@ -15,11 +15,11 @@ export class ViewsComponent {
 
   @Input() bank: number;
 
-  @Output() editedOperation = new EventEmitter<Operation>();
+  @Output() editedOperation = new EventEmitter<CrudOperation>();
 
   constructor() { }
 
-  enterOperation(operation: Operation): void {
+  enterOperation(operation: CrudOperation): void {
     this.editedOperation.emit(operation);
   }
 }

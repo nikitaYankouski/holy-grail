@@ -17,6 +17,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatGridListModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    MatTabsModule
+    MatTabsModule,
+    OverlayModule
   ],
   exports: [
     CommonModule,

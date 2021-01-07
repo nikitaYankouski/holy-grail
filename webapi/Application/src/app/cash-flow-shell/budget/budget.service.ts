@@ -41,6 +41,10 @@ export class BudgetService {
     this.cashFlowShellApi.updateOperation(operation).subscribe();
   }
 
+  deleteOperation(id: number): void {
+    this.cashFlowShellApi.deleteOperation(id).subscribe();
+  }
+
   sortByDate(models: Operation[]): Operation[] {
     return models.slice().sort((a: Operation, b: Operation) => {
       return a.timestamp.getTime() - b.timestamp.getTime();
