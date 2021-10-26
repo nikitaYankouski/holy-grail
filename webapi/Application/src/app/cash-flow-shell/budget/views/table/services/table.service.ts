@@ -8,7 +8,9 @@ import {BudgetService} from '../../../budget.service';
   providedIn: 'root'
 })
 export class TableService {
-  constructor(private datePipe: DatePipe) { }
+  constructor(
+    private datePipe: DatePipe,
+  ) { }
 
   static castIntlToNumber(value: string): number {
     let returnValue = '';

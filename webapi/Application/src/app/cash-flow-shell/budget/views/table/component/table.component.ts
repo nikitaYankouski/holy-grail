@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, Renderer2, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 
 import { TableService } from '../services/table.service';
@@ -14,6 +14,7 @@ import {TemplatePortal} from '@angular/cdk/portal';
 import {fromEvent, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {CrudOperation} from '../../../crud-operation';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-table',
@@ -45,11 +46,11 @@ export class TableComponent {
 
   @ViewChild(MatSort) sort: MatSort;
 
+  @ViewChild('userMenu') userMenu: TemplateRef<any>;
+
   @Output() updatedOperation = new EventEmitter<CrudOperation>();
 
   dataSource = new MatTableDataSource<ViewOperationTable>();
-
-  @ViewChild('userMenu') userMenu: TemplateRef<any>;
 
   sub: Subscription;
 
@@ -63,12 +64,15 @@ export class TableComponent {
     'balance'
   ];
 
+  @Input() templateRef: TemplateRef<any>;
+
   constructor(
     private tableService: TableService,
     private budgetService: BudgetService,
     public datePipe: DatePipe,
     public overlay: Overlay,
-    public viewContainerRef: ViewContainerRef
+    public viewContainerRef: ViewContainerRef,
+    public dialog: MatDialog
   ) { }
 
   refreshDataInTable(): void {
@@ -117,7 +121,11 @@ export class TableComponent {
     this.closeUserMenu();
   }
 
-  open(event: MouseEvent, user) {
+  openSearch(): void {
+
+  }
+
+  openUserMenu(event: MouseEvent, user): void {
     event.preventDefault();
     this.closeUserMenu();
 
@@ -154,7 +162,7 @@ export class TableComponent {
       ).subscribe(() => this.closeUserMenu())
   }
 
-  closeUserMenu() {
+  closeUserMenu(): void {
     this.sub && this.sub.unsubscribe();
     if (this.overlayRef) {
       this.overlayRef.dispose();
