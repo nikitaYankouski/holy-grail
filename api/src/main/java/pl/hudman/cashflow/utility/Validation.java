@@ -12,7 +12,9 @@ public class Validation {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
             formatter.parse(date);
             return true;
-        } catch (DateTimeParseException exception) {
+        } catch (DateTimeParseException ex) {
+            return false;
+        } catch (NullPointerException ex) {
             return false;
         }
     }
