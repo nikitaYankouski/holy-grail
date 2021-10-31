@@ -2,13 +2,13 @@ package pl.hudman.cashflow.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.hudman.cashflow.dto.OperationDto;
+import pl.hudman.cashflow.exception.IncorrectModel;
 import pl.hudman.cashflow.exception.IncorrectParameters;
+import pl.hudman.cashflow.exception.NotFound;
 import pl.hudman.cashflow.service.OperationService;
 
 import java.util.List;
@@ -27,5 +27,33 @@ public class OperationController {
         } catch (IncorrectParameters ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
         }
+    }
+
+    @PostMapping(value = "budget")
+    public ResponseEntity<String> addOperation(@RequestBody OperationDto operationDto) {
+        try {
+            this.operationService.addOperation(operationDto);
+            return new ResponseEntity<>("Ok", HttpStatus.OK);
+        } catch (IncorrectModel ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("budget/{id}")
+    public ResponseEntity<String> updateOperation(@RequestBody OperationDto operationDto, @PathVariable int id) {
+        try {
+            this.operationService.updateOperation(operationDto, id);
+            return new ResponseEntity<>("Ok", HttpStatus.OK);
+        } catch (IncorrectModel ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFound ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("budget/{id}")
+    public ResponseEntity<String> deleteOperation(@PathVariable int id) {
+        this.operationService.deleteOperation(id);
+        return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
 }

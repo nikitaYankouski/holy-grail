@@ -6,20 +6,34 @@ public class OperationDto {
     private String description;
     private String timeStamp;
     private boolean isInCome;
+    private long amountOfMoney;
 
-    public OperationDto(int id, int userId, String description, String timeStamp, boolean isInCome) {
+    public OperationDto(int id, int userId, String description, String timeStamp, boolean isInCome, long amountOfMoney) {
         this.id = id;
         this.userId = userId;
         this.description = description;
         this.timeStamp = timeStamp;
         this.isInCome = isInCome;
+        this.amountOfMoney = amountOfMoney;
     }
 
-    public OperationDto(int userId, String description, String timeStamp, boolean isInCome) {
+    public OperationDto(int userId, String description, String timeStamp, boolean isInCome, long amountOfMoney) {
         this.userId = userId;
         this.description = description;
         this.timeStamp = timeStamp;
         this.isInCome = isInCome;
+        this.amountOfMoney = amountOfMoney;
+    }
+
+    public OperationDto() {
+    }
+
+    public long getAmountOfMoney() {
+        return amountOfMoney;
+    }
+
+    public void setAmountOfMoney(long amountOfMoney) {
+        this.amountOfMoney = amountOfMoney;
     }
 
     public void setUserId(int userId) {
