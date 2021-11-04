@@ -13,13 +13,13 @@ import pl.hudman.cashflow.service.OperationService;
 
 import java.util.List;
 
-@RestController
+@RestController("/budget")
 public class OperationController {
 
     @Autowired
     private OperationService operationService;
 
-    @GetMapping("budget")
+    @GetMapping("/account")
     public @ResponseBody List<OperationDto> getOperations(
             @RequestParam String fromDate, @RequestParam String toDate) {
         try {
@@ -29,17 +29,19 @@ public class OperationController {
         }
     }
 
-    @PostMapping(value = "budget")
+    @PostMapping("/account")
     public ResponseEntity<String> addOperation(@RequestBody OperationDto operationDto) {
         try {
             this.operationService.addOperation(operationDto);
             return new ResponseEntity<>("Ok", HttpStatus.OK);
         } catch (IncorrectModel ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFound ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping("budget/{id}")
+    @PutMapping("/account/{id}")
     public ResponseEntity<String> updateOperation(@RequestBody OperationDto operationDto, @PathVariable int id) {
         try {
             this.operationService.updateOperation(operationDto, id);
@@ -51,7 +53,7 @@ public class OperationController {
         }
     }
 
-    @DeleteMapping("budget/{id}")
+    @DeleteMapping("/account/{id}")
     public ResponseEntity<String> deleteOperation(@PathVariable int id) {
         this.operationService.deleteOperation(id);
         return new ResponseEntity<>("Ok", HttpStatus.OK);

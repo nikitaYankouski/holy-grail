@@ -1,25 +1,35 @@
-package pl.hudman.cashflow.dto;
+package pl.hudman.cashflow.model;
 
-public class UserDto {
+import javax.persistence.*;
+
+@Entity
+@Table(name = "user_cash_flow")
+public class AppUser {
+
+    @Id
+    @GeneratedValue
     private int id;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "password_user")
     private String password;
+
+    @Column(name = "company_name")
     private String companyName;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    public UserDto(int id, String email, String password, String companyName, String phoneNumber) {
-        this.id = id;
+    public AppUser(String email, String password, String companyName, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.companyName = companyName;
         this.phoneNumber = phoneNumber;
     }
 
-    public UserDto(String email, String password, String companyName, String phoneNumber) {
-        this.email = email;
-        this.password = password;
-        this.companyName = companyName;
-        this.phoneNumber = phoneNumber;
+    public AppUser() {
     }
 
     public void setEmail(String email) {

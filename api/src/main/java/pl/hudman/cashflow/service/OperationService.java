@@ -7,7 +7,7 @@ import pl.hudman.cashflow.exception.IncorrectModel;
 import pl.hudman.cashflow.exception.IncorrectParameters;
 import pl.hudman.cashflow.exception.NotFound;
 import pl.hudman.cashflow.model.Operation;
-import pl.hudman.cashflow.model.User;
+import pl.hudman.cashflow.model.AppUser;
 import pl.hudman.cashflow.repository.OperationRepository;
 import pl.hudman.cashflow.utility.Mapper;
 import pl.hudman.cashflow.utility.Validation;
@@ -23,7 +23,7 @@ public class OperationService {
     private OperationRepository operationRepository;
 
     @Autowired
-    private UserService userService;
+    private AppUserService appUserService;
 
     public List<OperationDto> getOperations(String fromDate, String toDate) throws IncorrectParameters {
         if (Validation.checkDateFormat(fromDate) && Validation.checkDateFormat(toDate)) {
@@ -36,11 +36,11 @@ public class OperationService {
         throw new IncorrectParameters("Not valid date");
     }
 
-    public void addOperation(OperationDto operationDto) throws IncorrectModel {
+    public void addOperation(OperationDto operationDto) throws IncorrectModel, NotFound {
         if (operationDto != null && Validation.checkDateFormat(operationDto.getTimeStamp())) {
             Operation newOperation = Mapper.convertToOperation(operationDto);
-            User user = this.userService.getUserById(operationDto.getUserId());
-            newOperation.setUser(user);
+            AppUser appUser = this.appUserService.getUserById(operationDto.getUserId());
+            newOperation.setUser(appUser);
             this.operationRepository.save(newOperation);
             return;
         }

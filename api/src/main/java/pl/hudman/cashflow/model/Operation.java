@@ -13,7 +13,7 @@ public class Operation {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private AppUser appUser;
 
     @Column(name = "description")
     private String description;
@@ -37,8 +37,8 @@ public class Operation {
     public Operation() {
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public void setDescription(String description) {
@@ -61,8 +61,8 @@ public class Operation {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
     public String getDescription() {
