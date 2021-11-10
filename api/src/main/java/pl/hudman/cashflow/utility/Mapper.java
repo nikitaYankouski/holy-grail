@@ -12,7 +12,7 @@ public class Mapper {
     public static OperationDto convertToOperationDto(Operation operation) {
         return new OperationDto(
                 operation.getId(),
-                operation.getUser(),
+                operation.getUserId(),
                 operation.getDescription(),
                 operation.getTimeStamp().toString(),
                 operation.isCome(),
@@ -20,8 +20,9 @@ public class Mapper {
         );
     }
 
-    public static Operation convertToOperation(OperationDto operationDto) {
+    public static Operation convertToOperation(OperationDto operationDto, int userId) {
         return new Operation(
+                userId,
                 operationDto.getDescription(),
                 operationDto.isInCome(),
                 convertToTimestamp(operationDto.getTimeStamp()),

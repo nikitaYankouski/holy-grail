@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, Integer> {
 
-    List<Operation> findOperationByTimeStampGreaterThanEqualAndTimeStampLessThanEqual(Timestamp from, Timestamp to);
+    List<Operation> findOperationByUserIdAndTimeStampGreaterThanEqualAndTimeStampLessThanEqual(int userId, Timestamp timeStamp, Timestamp timeStamp2);
 }

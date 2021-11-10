@@ -17,8 +17,7 @@ public class OperationDto {
         this.amountOfMoney = amountOfMoney;
     }
 
-    public OperationDto(int userId, String description, String timeStamp, boolean isInCome, long amountOfMoney) {
-        this.userId = userId;
+    public OperationDto(String description, String timeStamp, boolean isInCome, long amountOfMoney) {
         this.description = description;
         this.timeStamp = timeStamp;
         this.isInCome = isInCome;

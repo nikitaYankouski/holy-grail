@@ -3,6 +3,9 @@ package pl.hudman.cashflow.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.hudman.cashflow.dto.OperationDto;
@@ -23,16 +26,22 @@ public class OperationController {
     @GetMapping("/operations")
     public List<OperationDto> getOperations(@RequestParam String fromDate, @RequestParam String toDate) {
         try {
-            return this.operationService.getOperations(fromDate, toDate);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = (String) auth.getPrincipal();
+            return this.operationService.getOperations(fromDate, toDate, username);
         } catch (IncorrectParameters ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+        } catch (NotFound ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }
     }
 
     @PostMapping("/operations/add")
     public ResponseEntity<String> addOperation(@RequestBody OperationDto operationDto) {
         try {
-            this.operationService.addOperation(operationDto);
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = (String) auth.getPrincipal();
+            this.operationService.addOperation(operationDto, username);
             return new ResponseEntity<>("Ok", HttpStatus.OK);
         } catch (IncorrectModel ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);

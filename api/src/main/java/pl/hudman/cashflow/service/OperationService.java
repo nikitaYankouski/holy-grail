@@ -25,22 +25,22 @@ public class OperationService {
     @Autowired
     private AppUserService appUserService;
 
-    public List<OperationDto> getOperations(String fromDate, String toDate) throws IncorrectParameters {
+    public List<OperationDto> getOperations(String fromDate, String toDate, String username) throws IncorrectParameters, NotFound {
         if (Validation.checkDateFormat(fromDate) && Validation.checkDateFormat(toDate)) {
+            int userId = this.appUserService.getUserByUserName(username).getId();
             List<Operation> operationList =
-                    this.operationRepository.findOperationByTimeStampGreaterThanEqualAndTimeStampLessThanEqual
-                            (Mapper.convertToTimestamp(fromDate), Mapper.convertToTimestamp(toDate));
+                    this.operationRepository.findOperationByUserIdAndTimeStampGreaterThanEqualAndTimeStampLessThanEqual
+                            (userId, Mapper.convertToTimestamp(fromDate), Mapper.convertToTimestamp(toDate));
 
             return operationList.stream().map(Mapper::convertToOperationDto).collect(Collectors.toList());
         }
         throw new IncorrectParameters("Not valid date");
     }
 
-    public void addOperation(OperationDto operationDto) throws IncorrectModel, NotFound {
+    public void addOperation(OperationDto operationDto, String username) throws IncorrectModel, NotFound {
         if (operationDto != null && Validation.checkDateFormat(operationDto.getTimeStamp())) {
-            Operation newOperation = Mapper.convertToOperation(operationDto);
-            AppUser appUser = this.appUserService.getUserById(operationDto.getUserId());
-            newOperation.setUser(appUser.getId());
+            int userId = this.appUserService.getUserByUserName(username).getId();
+            Operation newOperation = Mapper.convertToOperation(operationDto, userId);
             this.operationRepository.save(newOperation);
             return;
         }

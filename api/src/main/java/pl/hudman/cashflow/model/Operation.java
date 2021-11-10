@@ -12,7 +12,7 @@ public class Operation {
     private int id;
 
     @Column(name = "user_id")
-    private int user_id;
+    private int userId;
 
     @Column(name = "description")
     private String description;
@@ -26,7 +26,8 @@ public class Operation {
     @Column(name = "value_cash_flow")
     private long amountOfMoney;
 
-    public Operation(String description, boolean isCome, Timestamp timeStamp, long amountOfMoney) {
+    public Operation(int userId, String description, boolean isCome, Timestamp timeStamp, long amountOfMoney) {
+        this.userId = userId;
         this.description = description;
         this.isCome = isCome;
         this.timeStamp = timeStamp;
@@ -36,8 +37,12 @@ public class Operation {
     public Operation() {
     }
 
-    public void setUser(int user_id) {
-        this.user_id = user_id;
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int user_id) {
+        this.userId = user_id;
     }
 
     public void setDescription(String description) {
@@ -58,10 +63,6 @@ public class Operation {
 
     public int getId() {
         return id;
-    }
-
-    public int getUser() {
-        return user_id;
     }
 
     public String getDescription() {
