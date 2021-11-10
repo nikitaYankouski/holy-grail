@@ -40,7 +40,7 @@ public class OperationService {
         if (operationDto != null && Validation.checkDateFormat(operationDto.getTimeStamp())) {
             Operation newOperation = Mapper.convertToOperation(operationDto);
             AppUser appUser = this.appUserService.getUserById(operationDto.getUserId());
-            newOperation.setUser(appUser);
+            newOperation.setUser(appUser.getId());
             this.operationRepository.save(newOperation);
             return;
         }

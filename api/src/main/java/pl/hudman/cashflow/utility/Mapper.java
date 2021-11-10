@@ -1,6 +1,8 @@
 package pl.hudman.cashflow.utility;
 
+import pl.hudman.cashflow.dto.AppUserDto;
 import pl.hudman.cashflow.dto.OperationDto;
+import pl.hudman.cashflow.model.AppUser;
 import pl.hudman.cashflow.model.Operation;
 
 import java.sql.Timestamp;
@@ -10,7 +12,7 @@ public class Mapper {
     public static OperationDto convertToOperationDto(Operation operation) {
         return new OperationDto(
                 operation.getId(),
-                operation.getUser().getId(),
+                operation.getUser(),
                 operation.getDescription(),
                 operation.getTimeStamp().toString(),
                 operation.isCome(),
@@ -24,6 +26,15 @@ public class Mapper {
                 operationDto.isInCome(),
                 convertToTimestamp(operationDto.getTimeStamp()),
                 operationDto.getAmountOfMoney()
+        );
+    }
+
+    public static AppUser convertToUser(AppUserDto userDto) {
+        return new AppUser(
+                userDto.getEmail(),
+                userDto.getPassword(),
+                userDto.getCompanyName(),
+                userDto.getPhoneNumber()
         );
     }
 

@@ -13,15 +13,15 @@ import pl.hudman.cashflow.service.OperationService;
 
 import java.util.List;
 
-@RestController("/budget")
+@RestController
+@RequestMapping("/budget")
 public class OperationController {
 
     @Autowired
     private OperationService operationService;
 
-    @GetMapping("/account")
-    public @ResponseBody List<OperationDto> getOperations(
-            @RequestParam String fromDate, @RequestParam String toDate) {
+    @GetMapping("/operations")
+    public List<OperationDto> getOperations(@RequestParam String fromDate, @RequestParam String toDate) {
         try {
             return this.operationService.getOperations(fromDate, toDate);
         } catch (IncorrectParameters ex) {
@@ -29,7 +29,7 @@ public class OperationController {
         }
     }
 
-    @PostMapping("/account")
+    @PostMapping("/operations/add")
     public ResponseEntity<String> addOperation(@RequestBody OperationDto operationDto) {
         try {
             this.operationService.addOperation(operationDto);
@@ -41,7 +41,7 @@ public class OperationController {
         }
     }
 
-    @PutMapping("/account/{id}")
+    @PutMapping("/operations/update/{id}")
     public ResponseEntity<String> updateOperation(@RequestBody OperationDto operationDto, @PathVariable int id) {
         try {
             this.operationService.updateOperation(operationDto, id);
@@ -53,7 +53,7 @@ public class OperationController {
         }
     }
 
-    @DeleteMapping("/account/{id}")
+    @DeleteMapping("/operations/delete/{id}")
     public ResponseEntity<String> deleteOperation(@PathVariable int id) {
         this.operationService.deleteOperation(id);
         return new ResponseEntity<>("Ok", HttpStatus.OK);

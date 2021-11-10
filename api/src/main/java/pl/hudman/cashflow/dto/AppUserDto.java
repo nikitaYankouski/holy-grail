@@ -22,6 +22,9 @@ public class AppUserDto {
         this.phoneNumber = phoneNumber;
     }
 
+    public AppUserDto() {
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }

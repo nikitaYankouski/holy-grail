@@ -11,9 +11,8 @@ public class Operation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private AppUser appUser;
+    @Column(name = "user_id")
+    private int user_id;
 
     @Column(name = "description")
     private String description;
@@ -37,8 +36,8 @@ public class Operation {
     public Operation() {
     }
 
-    public void setUser(AppUser appUser) {
-        this.appUser = appUser;
+    public void setUser(int user_id) {
+        this.user_id = user_id;
     }
 
     public void setDescription(String description) {
@@ -61,8 +60,8 @@ public class Operation {
         return id;
     }
 
-    public AppUser getUser() {
-        return appUser;
+    public int getUser() {
+        return user_id;
     }
 
     public String getDescription() {
