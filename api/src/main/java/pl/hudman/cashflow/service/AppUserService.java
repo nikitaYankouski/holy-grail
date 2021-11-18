@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.hudman.cashflow.dto.AppUserDto;
+import pl.hudman.cashflow.exception.FoundUserBy;
 import pl.hudman.cashflow.exception.IncorrectModel;
 import pl.hudman.cashflow.exception.NotFound;
 import pl.hudman.cashflow.model.AppUser;
@@ -55,6 +56,22 @@ public class AppUserService implements UserDetailsService {
         }
     }
 
+    public void checkUserFields(AppUserDto appUserDto) throws FoundUserBy {
+        if (appUserDto != null) {
+            String companyName = appUserDto.getCompanyName();
+            String email = appUserDto.getEmail();
+            String phoneNumber = appUserDto.getPhoneNumber();
+
+            Optional<AppUser> foundUserByCompanyName = this.appUserRepository.findByCompanyName(companyName);
+            Optional<AppUser> foundUserByEmail = this.appUserRepository.findByEmail(email);
+            Optional<AppUser> foundUserByPhoneNumber = this.appUserRepository.findByPhoneNumber(phoneNumber);
+
+            this.checkIsUserFound(foundUserByCompanyName, companyName);
+            this.checkIsUserFound(foundUserByEmail, email);
+            this.checkIsUserFound(foundUserByPhoneNumber, phoneNumber);
+        }
+    }
+
     public void updateUser(AppUserDto appUserDto, int id) throws NotFound {
         if (appUserDto != null) {
             Optional<AppUser> user = this.appUserRepository.findById(id);
@@ -82,6 +99,12 @@ public class AppUserService implements UserDetailsService {
 
     public void deleteUser(int id) {
         this.appUserRepository.deleteById(id);
+    }
+
+    private void checkIsUserFound(Optional<AppUser> foundUser, String searchValue) throws FoundUserBy {
+        if (foundUser.isPresent()) {
+            throw new FoundUserBy("Username by " + searchValue + " already exists!");
+        }
     }
 
     @Override

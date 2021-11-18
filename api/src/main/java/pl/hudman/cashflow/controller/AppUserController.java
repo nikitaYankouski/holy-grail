@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.hudman.cashflow.dto.AppUserDto;
 import pl.hudman.cashflow.dto.OperationDto;
+import pl.hudman.cashflow.exception.FoundUserBy;
 import pl.hudman.cashflow.exception.IncorrectModel;
 import pl.hudman.cashflow.exception.IncorrectParameters;
 import pl.hudman.cashflow.exception.NotFound;
@@ -57,8 +58,11 @@ public class AppUserController {
     @PostMapping("/user/add")
     public ResponseEntity<String> addOperation(@RequestBody AppUserDto appUserDto) {
         try {
+            this.appUserService.checkUserFields(appUserDto);
             this.appUserService.addUser(appUserDto);
             return new ResponseEntity<>("Ok", HttpStatus.OK);
+        } catch (FoundUserBy ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.FOUND);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
