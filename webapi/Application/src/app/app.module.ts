@@ -25,6 +25,10 @@ import { DatepickerDialogComponent } from './cash-flow-shell/budget/filter-panel
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 import { RenderDatepickerDirective } from './cash-flow-shell/budget/filter-panel/datepicker-dialog/render-datepicker.directive';
 import { ViewsComponent } from './cash-flow-shell/budget/views/views.component';
+import { authInterceptorProviders } from './_helper/auth.interceptor';
+import { LoginPageComponent } from './auth-shell/login-page/login-page.component';
+import { SignupPageComponent } from './auth-shell/signup-page/signup-page.component';
+import { AuthShellComponent } from './auth-shell/auth-shell.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +42,10 @@ import { ViewsComponent } from './cash-flow-shell/budget/views/views.component';
     BudgetComponent,
     DatepickerDialogComponent,
     RenderDatepickerDirective,
-    ViewsComponent
+    ViewsComponent,
+    LoginPageComponent,
+    SignupPageComponent,
+    AuthShellComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +60,8 @@ import { ViewsComponent } from './cash-flow-shell/budget/views/views.component';
   ],
   providers: [
     DatePipe,
-    CookieService
+    CookieService,
+    authInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })

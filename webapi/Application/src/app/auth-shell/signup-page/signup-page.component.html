@@ -1,0 +1,29 @@
+<p>
+  <mat-toolbar>
+    <span>Cash Flow</span>
+  </mat-toolbar>
+</p>
+<div class="center">
+  <form class="example-form" [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Company name</mat-label>
+      <input matInput formControlName="username">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Phone number</mat-label>
+      <input matInput formControlName="phoneNumber">
+    </mat-form-field>
+    <button type="submit" mat-raised-button>Submit</button>
+  </form>
+</div>
