@@ -1,6 +1,18 @@
 <p>
   <mat-toolbar>
     <span>Cash Flow</span>
+    <span class="example-spacer"></span>
+    <a routerLink='../login' routerLinkActive="active">
+      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+        Log in
+      </button>
+    </a>
+
+    <a routerLink='../sign' routerLinkActive="active">
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+        Sign Up
+      </button>
+    </a>
   </mat-toolbar>
 </p>
 <div class="center">
@@ -16,4 +28,8 @@
     </mat-form-field>
     <button type="submit" mat-raised-button>Submit</button>
   </form>
+</div>
+
+<div *ngIf="isLoginFailed">
+  <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
 </div>

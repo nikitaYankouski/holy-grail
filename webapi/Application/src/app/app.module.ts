@@ -29,6 +29,7 @@ import { authInterceptorProviders } from './_helper/auth.interceptor';
 import { LoginPageComponent } from './auth-shell/login-page/login-page.component';
 import { SignupPageComponent } from './auth-shell/signup-page/signup-page.component';
 import { AuthShellComponent } from './auth-shell/auth-shell.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { AuthShellComponent } from './auth-shell/auth-shell.component';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxDaterangepickerMd.forRoot()
+    NgxDaterangepickerMd.forRoot(),
+    NgbModule
   ],
   providers: [
     DatePipe,
