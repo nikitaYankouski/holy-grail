@@ -24,6 +24,8 @@ export class AuthInterceptor implements HttpInterceptor {
         headers: request.headers.set(TOKEN_HEADER_KEY, START_TOKEN + token)
       });
     }
+
+    console.log(authRequest);
     return next.handle(authRequest);
   }
 }

@@ -30,7 +30,7 @@ export class FilterPanelComponent implements OnInit{
     public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.filterDateRange = DatePeriodService.getFirstAndLastDateOfCurrentMonth(new Date());
+    this.filterDateRange = DatePeriodService.initCurrentDatePeriod(new Date());
   }
 
   openDatePicker(): void {

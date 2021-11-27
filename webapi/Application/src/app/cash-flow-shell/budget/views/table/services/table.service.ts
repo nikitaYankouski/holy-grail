@@ -34,7 +34,7 @@ export class TableService {
     operations.forEach(operation => {
       viewModel.push({
         id: operation.id,
-        budgetId: operation.budgetId,
+        budgetId: operation.userId,
         description: operation.description,
         timestamp: this.datePipe.transform(operation.timestamp, 'yyyy-MM-dd'),
         cashIn: typeof operation.cashIn !== 'undefined' ?
@@ -51,7 +51,7 @@ export class TableService {
     return viewModelTable.map(viewModel => {
       return {
         id: viewModel.id,
-        budgetId: viewModel.budgetId,
+        userId: viewModel.budgetId,
         description: viewModel.description,
         timestamp: new Date(viewModel.timestamp),
         cashIn: typeof viewModel.cashIn !== 'undefined' ?

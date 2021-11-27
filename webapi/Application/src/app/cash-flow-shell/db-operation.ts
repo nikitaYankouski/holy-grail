@@ -1,8 +1,8 @@
 export interface DbOperation {
     id: number;
-    budgetId: number;
+    userId: number;
     description: string;
-    isIncome: boolean;
-    timestamp: string;
+    inCome: boolean;
+    timeStamp: string;
     amountOfMoney: number;
 }

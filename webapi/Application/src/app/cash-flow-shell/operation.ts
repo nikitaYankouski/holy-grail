@@ -1,6 +1,6 @@
 export interface Operation {
     id: number;
-    budgetId: number;
+    userId: number;
     description: string;
     timestamp: Date;
     cashIn: number;

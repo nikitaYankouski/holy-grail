@@ -41,7 +41,7 @@ export class CashFlowShellService {
 
   addOperation(operation: Operation): Observable<DbOperation> {
     const operationToBackend = this.castService.castToDbOperation(operation);
-    return this.http.post<DbOperation>(this.apiUrl, operationToBackend)
+    return this.http.post<DbOperation>(this.apiUrl + '/add', operationToBackend)
       .pipe(
         catchError(this.handleError<any>('addOperation'))
       );
@@ -49,7 +49,7 @@ export class CashFlowShellService {
 
   updateOperation(operation: Operation): Observable<DbOperation> {
     const operationToBackend = this.castService.castToDbOperation(operation);
-    return this.http.put<DbOperation>(this.apiUrl, operationToBackend)
+    return this.http.put<DbOperation>(this.apiUrl + '/update/' + operation.id, operationToBackend)
       .pipe(
         catchError(this.handleError<any>('updateOperation'))
       );

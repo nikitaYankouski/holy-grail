@@ -15,6 +15,13 @@ export class DatePeriodService {
     );
   }
 
+  static initCurrentDatePeriod(presentDay: Date): DateRange {
+    return new DateRange(
+      new Date(presentDay.getFullYear() - 1, presentDay.getMonth(), presentDay.getDate()),
+      new Date(presentDay.getFullYear(), presentDay.getMonth(), presentDay.getDate())
+    );
+  }
+
   // rewrite
   getPeriod(direction: string, period: string): DateRange {
     switch (period) {

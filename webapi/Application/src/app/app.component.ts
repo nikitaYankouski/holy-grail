@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from './_services/token-storage.service';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = !this.tokenStorageService.getUser();
-    console.log(this.isLoggedIn);
     if (this.isLoggedIn) {
       const user = this.tokenStorageService.getUser();
       this.username = user.username;

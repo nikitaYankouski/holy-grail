@@ -17,11 +17,11 @@ export class CastService {
   castToOperation(operation: DbOperation): Operation {
     return {
       id: operation.id,
-      budgetId: operation.budgetId,
+      userId: operation.userId,
       description: operation.description,
-      timestamp: new Date(operation.timestamp.substr(0, 10)),
-      cashIn: operation.isIncome ? operation.amountOfMoney : undefined,
-      cashOut: operation.isIncome ? undefined : operation.amountOfMoney,
+      timestamp: new Date(operation.timeStamp.substr(0, 10)),
+      cashIn: operation.inCome ? operation.amountOfMoney : undefined,
+      cashOut: operation.inCome ? undefined : operation.amountOfMoney,
       balance: 0
     };
   }
@@ -29,10 +29,10 @@ export class CastService {
   castToDbOperation(operation: Operation): DbOperation {
     return {
       id: operation.id === 0 ? 0 : operation.id,
-      budgetId: operation.budgetId,
+      userId: operation.userId,
       description: operation.description,
-      isIncome: typeof operation.cashIn !== 'undefined',
-      timestamp: this.castDateTimeToFormat(operation.timestamp),
+      inCome: typeof operation.cashIn !== 'undefined',
+      timeStamp: this.castDateTimeToFormat(operation.timestamp),
       amountOfMoney: typeof operation.cashIn !== 'undefined' ? operation.cashIn : operation.cashOut
     };
   }

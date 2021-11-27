@@ -33,6 +33,7 @@ export class BudgetService {
 
   getOperations(filter: DateRange): void {
     this.cashFlowShellApi.getOperations(filter).subscribe(params => {
+      console.log(params);
       this.operationsSource.next(params);
     });
   }

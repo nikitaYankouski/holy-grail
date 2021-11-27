@@ -3,6 +3,8 @@ import { FormBuilder } from '@angular/forms';
 import { TokenStorageService } from '../../_services/token-storage.service';
 import {AuthService} from '../../_services/auth.service';
 import {map} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-login-page',
@@ -17,12 +19,13 @@ export class LoginPageComponent implements OnInit {
   });
   isLoggedIn = false;
   isLoginFailed = false;
-  errorMessage = '';
   alert: Alert;
+  token: CashflowToken;
 
   constructor(private formBuilder: FormBuilder,
               private tokenStorage: TokenStorageService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private router: Router) { }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -42,12 +45,14 @@ export class LoginPageComponent implements OnInit {
               message: 'Wrong password or login'
             };
           } else {
+            this.token = jwt_decode(data.access_token)
             this.tokenStorage.saveToken(data.access_token);
-            this.tokenStorage.saveUser(data.resfresh_token);
+            this.tokenStorage.saveUser(this.token.sub);
 
             this.isLoginFailed = false;
             this.isLoggedIn = true;
             this.checkoutForm.reset();
+            this.router.navigate(['/budget/0']);
           }
         }
         );
