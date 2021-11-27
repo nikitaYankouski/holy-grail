@@ -56,11 +56,11 @@ public class AppUserController {
     }
 
     @PostMapping("/user/add")
-    public ResponseEntity<String> addOperation(@RequestBody AppUserDto appUserDto) {
+    public ResponseEntity addOperation(@RequestBody AppUserDto appUserDto) {
         try {
             this.appUserService.checkUserFields(appUserDto);
             this.appUserService.addUser(appUserDto);
-            return new ResponseEntity<>("Ok", HttpStatus.OK);
+            return ResponseEntity.ok().body("ok");
         } catch (FoundUserBy ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.FOUND);
         } catch (Exception ex) {

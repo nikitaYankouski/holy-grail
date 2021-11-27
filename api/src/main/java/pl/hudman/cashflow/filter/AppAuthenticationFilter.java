@@ -47,7 +47,7 @@ public class AppAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 20 * 60 * 1000)) // 20min
+                .withExpiresAt(new Date(System.currentTimeMillis() + 50 * 60 * 1000)) // 20min
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);

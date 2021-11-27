@@ -1,5 +1,6 @@
 package pl.hudman.cashflow.configuration;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -11,9 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import pl.hudman.cashflow.filter.AppAuthenticationFilter;
 import pl.hudman.cashflow.filter.AppAuthorizationFilter;
+import pl.hudman.cashflow.filter.CorsFilter;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -39,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         AppAuthenticationFilter appAuthenticationFilter = new AppAuthenticationFilter(authenticationManagerBean());
         appAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**", "/api/refreshtoken/**").permitAll();
@@ -52,8 +57,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(DELETE, "/api/user/delete/**").authenticated();
         http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(appAuthenticationFilter);
+        http.addFilterBefore(new CorsFilter(), ChannelProcessingFilter.class);
         http.addFilterBefore(new AppAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
 
     @Bean
     @Override
