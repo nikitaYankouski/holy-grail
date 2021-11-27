@@ -1,6 +1,6 @@
 export interface ViewOperationTable {
     id: number;
-    budgetId: number;
+    userId: number;
     description: string;
     timestamp: string;
     cashIn: string;

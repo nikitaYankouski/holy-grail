@@ -63,7 +63,10 @@
 
 <ng-template #userMenu let-operation>
   <section class="user-menu">
-    <div (click)="deleteOperation(operation)">Delete</div>
+    <div (click)="deleteOperation(operation)">delete</div>
+  </section>
+  <section class="user-menu">
+    <div (click)="editOperation(operation)">edit</div>
   </section>
 </ng-template>
 

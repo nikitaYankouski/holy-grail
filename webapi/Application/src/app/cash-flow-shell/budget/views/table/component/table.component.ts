@@ -15,6 +15,8 @@ import {fromEvent, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {CrudOperation} from '../../../crud-operation';
 import {MatDialog} from '@angular/material/dialog';
+import {EditoperationDialogComponent} from './editoperation-dialog/editoperation-dialog.component';
+import {DialogData} from '../../../../dialog-edit-data';
 
 @Component({
   selector: 'app-table',
@@ -121,8 +123,35 @@ export class TableComponent {
     this.closeUserMenu();
   }
 
-  openSearch(): void {
+  editOperation(viewOperation: ViewOperationTable): void {
+    const operation = this.operations.find(it => it.id === viewOperation.id);
+    const dialogRef = this.dialog.open(EditoperationDialogComponent, {
+      width: '400px',
+      data: {
+        description: operation.description,
+        date: operation.timestamp,
+        isCome: typeof operation.cashIn !== 'undefined',
+        amount: typeof operation.cashIn !== 'undefined' ? operation.cashIn : operation.cashOut
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (typeof result !== undefined) {
+        operation.description = result.description;
+        operation.timestamp = result.date;
+        if (result.isCome) {
+          operation.cashIn = result.amount;
+        } else {
+          operation.cashOut = result.amount;
+        }
+        this.refreshDataInTable();
+        this.updatedOperation.emit({
+          type: 'update',
+          operation: operation
+        });
+        this.closeUserMenu();
+      }
+    });
   }
 
   openUserMenu(event: MouseEvent, user): void {

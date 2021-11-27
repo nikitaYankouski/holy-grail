@@ -34,7 +34,7 @@ export class TableService {
     operations.forEach(operation => {
       viewModel.push({
         id: operation.id,
-        budgetId: operation.userId,
+        userId: operation.userId,
         description: operation.description,
         timestamp: this.datePipe.transform(operation.timestamp, 'yyyy-MM-dd'),
         cashIn: typeof operation.cashIn !== 'undefined' ?
@@ -51,7 +51,7 @@ export class TableService {
     return viewModelTable.map(viewModel => {
       return {
         id: viewModel.id,
-        userId: viewModel.budgetId,
+        userId: viewModel.userId,
         description: viewModel.description,
         timestamp: new Date(viewModel.timestamp),
         cashIn: typeof viewModel.cashIn !== 'undefined' ?
@@ -61,5 +61,19 @@ export class TableService {
         balance: TableService.castIntlToNumber(viewModel.balance)
       };
     });
+  }
+
+  castToOperation(viewModelTable: ViewOperationTable): Operation {
+    return {
+        id: viewModelTable.id,
+        userId: viewModelTable.userId,
+        description: viewModelTable.description,
+        timestamp: new Date(viewModelTable.timestamp),
+        cashIn: typeof viewModelTable.cashIn !== 'undefined' ?
+          TableService.castIntlToNumber(viewModelTable.cashIn) : undefined,
+        cashOut: typeof viewModelTable.cashOut !== 'undefined' ?
+          TableService.castIntlToNumber(viewModelTable.cashOut) : undefined,
+        balance: TableService.castIntlToNumber(viewModelTable.balance)
+      };
   }
 }

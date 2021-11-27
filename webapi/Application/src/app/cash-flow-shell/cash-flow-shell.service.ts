@@ -56,8 +56,8 @@ export class CashFlowShellService {
   }
 
   deleteOperation(id: number): Observable<{}> {
-    const options = { params: new HttpParams().set('id', String(id)) };
-    return this.http.delete<DbOperation>(this.apiUrl, options)
+    //const options = { params: new HttpParams().set('id', String(id)) };
+    return this.http.delete<DbOperation>(this.apiUrl + '/delete/' + id)
       .pipe(
         catchError(this.handleError<any>('deleteOperation'))
       );

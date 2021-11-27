@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module'
 import { AppRoutingModule } from './app-routing.module';
 import { ChartsModule } from 'ng2-charts';
+import { MatRadioModule } from '@angular/material/radio';
 
 import { AppComponent } from './app.component';
 import { CashFlowShellComponent } from './cash-flow-shell/cash-flow-shell.component';
@@ -30,6 +31,7 @@ import { LoginPageComponent } from './auth-shell/login-page/login-page.component
 import { SignupPageComponent } from './auth-shell/signup-page/signup-page.component';
 import { AuthShellComponent } from './auth-shell/auth-shell.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditoperationDialogComponent } from './cash-flow-shell/budget/views/table/component/editoperation-dialog/editoperation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ViewsComponent,
     LoginPageComponent,
     SignupPageComponent,
-    AuthShellComponent
+    AuthShellComponent,
+    EditoperationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserAnimationsModule,
     HttpClientModule,
     ChartsModule,
+    MatRadioModule,
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,

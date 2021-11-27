@@ -54,7 +54,7 @@ public class OperationController {
     public ResponseEntity<String> updateOperation(@RequestBody OperationDto operationDto, @PathVariable int id) {
         try {
             this.operationService.updateOperation(operationDto, id);
-            return new ResponseEntity<>("Ok", HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IncorrectModel ex) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (NotFound ex) {
@@ -65,6 +65,6 @@ public class OperationController {
     @DeleteMapping("/operations/delete/{id}")
     public ResponseEntity<String> deleteOperation(@PathVariable int id) {
         this.operationService.deleteOperation(id);
-        return new ResponseEntity<>("Ok", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
