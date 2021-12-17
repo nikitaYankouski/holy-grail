@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Operation} from '../operation';
 import {CashFlowShellService} from '../cash-flow-shell.service';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {DateRange} from './date-range';
+import {DbOperation} from '../db-operation';
+import {CastService} from '../cast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,9 +35,12 @@ export class BudgetService {
 
   getOperations(filter: DateRange): void {
     this.cashFlowShellApi.getOperations(filter).subscribe(params => {
-      console.log(params);
-      this.operationsSource.next(params);
+      this.operationsSource.next(this.sortByDate(params));
     });
+  }
+
+  addOperation(operation: Operation): Observable<DbOperation> {
+    return this.cashFlowShellApi.addOperation(operation);
   }
 
   updateOperation(operation: Operation): void {

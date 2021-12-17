@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DateRange} from '../date-range';
 import {MatDialog} from '@angular/material/dialog';
 import {DatepickerDialogComponent} from './datepicker-dialog/datepicker-dialog.component';
@@ -25,6 +25,18 @@ export class FilterPanelComponent implements OnInit{
   }
 
   @Output() enteringFilterDateRange = new EventEmitter<DateRange>();
+
+  private _refresh: boolean;
+
+  get refresh(): boolean {
+    return this._refresh;
+  }
+
+  @Input() set refresh(value: boolean) {
+    if (typeof value !== 'undefined') {
+      this.enteringFilterDateRange.emit(this.filterDateRange);
+    }
+  }
 
   constructor(
     public dialog: MatDialog) { }

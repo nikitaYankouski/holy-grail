@@ -1,6 +1,7 @@
 <div class="content">
-
-  <table mat-table [dataSource]="dataSource" matSort matSortDisableClear (matSortChange)="sortData()"
+  <button mat-raised-button (click)="addOperation()">Add</button>
+  <!-- matSort matSortDisableClear (matSortChange)="sortData()"-->
+  <table mat-table [dataSource]="dataSource"
          cdkDropList (cdkDropListDropped)="onDrop($event)" class="table">
 
     <ng-container matColumnDef="action">
@@ -18,7 +19,8 @@
     </ng-container>
 
     <ng-container matColumnDef="timestamp">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+      <!--mat-sort-header-->
+      <th mat-header-cell *matHeaderCellDef > Date </th>
       <td mat-cell *matCellDef="let element" class="col-sm">
         {{this.datePipe.transform(element.timestamp, 'MMM d, y')}}
       </td>

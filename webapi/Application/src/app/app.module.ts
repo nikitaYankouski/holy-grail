@@ -32,6 +32,7 @@ import { SignupPageComponent } from './auth-shell/signup-page/signup-page.compon
 import { AuthShellComponent } from './auth-shell/auth-shell.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditoperationDialogComponent } from './cash-flow-shell/budget/views/table/component/editoperation-dialog/editoperation-dialog.component';
+import { AddoperationDialogComponent } from './cash-flow-shell/budget/views/table/component/addoperation-dialog/addoperation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { EditoperationDialogComponent } from './cash-flow-shell/budget/views/tab
     LoginPageComponent,
     SignupPageComponent,
     AuthShellComponent,
-    EditoperationDialogComponent
+    EditoperationDialogComponent,
+    AddoperationDialogComponent
   ],
   imports: [
     BrowserModule,

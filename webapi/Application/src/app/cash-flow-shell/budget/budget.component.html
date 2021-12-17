@@ -1,6 +1,8 @@
-<app-filter-panel (enteringFilterDateRange)="refreshOperationsByFilter($event)"></app-filter-panel>
+<app-filter-panel (enteringFilterDateRange)="refreshOperationsByFilter($event)"
+                  [refresh]="refreshPage"></app-filter-panel>
 
 <app-views [enteredFilteredOperationsByDate]="enteringOperationsByFilter"
            [enteredOperationCRUD]="enteringOperationCRUD"
+           [enteredNewOperationToTable]="enteringNewOperationToTable"
            [bank]="enteringBank" (editedOperation)="updateOperation($event)"></app-views>
 

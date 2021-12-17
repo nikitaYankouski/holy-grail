@@ -37,12 +37,11 @@ public class OperationService {
         throw new IncorrectParameters("Not valid date");
     }
 
-    public void addOperation(OperationDto operationDto, String username) throws IncorrectModel, NotFound {
+    public OperationDto addOperation(OperationDto operationDto, String username) throws IncorrectModel, NotFound {
         if (operationDto != null && Validation.checkDateFormat(operationDto.getTimeStamp())) {
             int userId = this.appUserService.getUserByUserName(username).getId();
             Operation newOperation = Mapper.convertToOperation(operationDto, userId);
-            this.operationRepository.save(newOperation);
-            return;
+            return Mapper.convertToOperationDto(this.operationRepository.save(newOperation));
         }
         throw new IncorrectModel("Not valid operation");
     }

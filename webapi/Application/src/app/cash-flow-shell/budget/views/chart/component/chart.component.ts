@@ -242,4 +242,11 @@ export class ChartComponent {
       this._chart.refresh();
     }, 0);
   }
+
+  getImageChart(): void {
+    const link = document.createElement('a');
+    link.href = this._chart.toBase64Image();
+    link.download = 'chart.png';
+    link.click();
+  }
 }

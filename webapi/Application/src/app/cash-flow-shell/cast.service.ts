@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {DbOperation} from './db-operation';
 import {Operation} from './operation';
+import {DbAddOperation} from './db-add-operation';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -29,6 +30,16 @@ export class CastService {
   castToDbOperation(operation: Operation): DbOperation {
     return {
       id: operation.id === 0 ? 0 : operation.id,
+      userId: operation.userId,
+      description: operation.description,
+      inCome: typeof operation.cashIn !== 'undefined',
+      timeStamp: this.castDateTimeToFormat(operation.timestamp),
+      amountOfMoney: typeof operation.cashIn !== 'undefined' ? operation.cashIn : operation.cashOut
+    };
+  }
+
+  castToDbAddOperation(operation: Operation): DbAddOperation {
+    return {
       userId: operation.userId,
       description: operation.description,
       inCome: typeof operation.cashIn !== 'undefined',

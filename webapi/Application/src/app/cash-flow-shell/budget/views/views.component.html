@@ -2,7 +2,9 @@
   <app-chart [filteredOperationsByDate]="enteredFilteredOperationsByDate" [bank]="bank"
              [operationCRUD]="enteredOperationCRUD"></app-chart>
 
-  <app-table [operations]="enteredFilteredOperationsByDate" [bank]="bank"
+  <app-table [operations]="enteredFilteredOperationsByDate"
+             [newOperation]="enteredNewOperationToTable"
+             [bank]="bank"
              (updatedOperation)="enterOperation($event)"></app-table>
 </div>
 

@@ -13,6 +13,8 @@ export class ViewsComponent {
 
   @Input() enteredOperationCRUD: CrudOperation;
 
+  @Input() enteredNewOperationToTable: Operation;
+
   @Input() bank: number;
 
   @Output() editedOperation = new EventEmitter<CrudOperation>();

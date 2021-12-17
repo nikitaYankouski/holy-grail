@@ -37,16 +37,13 @@ public class OperationController {
     }
 
     @PostMapping("/operations/add")
-    public ResponseEntity<String> addOperation(@RequestBody OperationDto operationDto) {
+    public OperationDto addOperation(@RequestBody OperationDto operationDto) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String username = (String) auth.getPrincipal();
-            this.operationService.addOperation(operationDto, username);
-            return new ResponseEntity<>("Ok", HttpStatus.OK);
-        } catch (IncorrectModel ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFound ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+            return this.operationService.addOperation(operationDto, username);
+        } catch (IncorrectModel | NotFound ex) {
+            return null;
         }
     }
 

@@ -4,6 +4,7 @@ import {DateRange} from './date-range';
 import {ActivatedRoute} from '@angular/router';
 import {BudgetService} from './budget.service';
 import {CrudOperation} from './crud-operation';
+import {CastService} from '../cast.service';
 
 @Component({
   selector: 'app-budget',
@@ -18,9 +19,14 @@ export class BudgetComponent implements OnInit {
 
   enteringOperationCRUD: CrudOperation;
 
+  enteringNewOperationToTable: Operation;
+
+  refreshPage: boolean;
+
   constructor(
     private route: ActivatedRoute,
-    private budgetService: BudgetService) { }
+    private budgetService: BudgetService,
+    private castService: CastService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -42,6 +48,7 @@ export class BudgetComponent implements OnInit {
         type: crudOperation.type,
         operation: crudOperation.operation
       };
+      this.refreshPage = !this.refreshPage;
     }
 
     if (crudOperation.type === 'delete') {
@@ -50,6 +57,18 @@ export class BudgetComponent implements OnInit {
         type: crudOperation.type,
         operation: crudOperation.operation
       }
+    }
+
+    if (crudOperation.type === 'add') {
+      this.budgetService.addOperation(crudOperation.operation).subscribe(
+        dbOperation => {
+          if (typeof dbOperation !== 'undefined') {
+            this.enteringNewOperationToTable = this.castService.castToOperation(dbOperation);
+            this.refreshPage = !this.refreshPage;
+          }
+        }
+      );
+
     }
   }
 }

@@ -17,6 +17,8 @@ import {CrudOperation} from '../../../crud-operation';
 import {MatDialog} from '@angular/material/dialog';
 import {EditoperationDialogComponent} from './editoperation-dialog/editoperation-dialog.component';
 import {DialogData} from '../../../../dialog-edit-data';
+import {AddoperationDialogComponent} from './addoperation-dialog/addoperation-dialog.component';
+import {AppComponent} from '../../../../../app.component';
 
 @Component({
   selector: 'app-table',
@@ -44,6 +46,19 @@ export class TableComponent {
   @Input() set operations(value: Operation[]) {
     this._operations = value;
     this.refreshDataInTable();
+  }
+
+  private _newOperation: Operation;
+
+  get newOperation(): Operation {
+    return this._newOperation;
+  }
+
+  @Input() set newOperation(value: Operation) {
+    if (typeof value !== 'undefined') {
+      this._operations.push(value);
+      this.refreshDataInTable();
+    }
   }
 
   @ViewChild(MatSort) sort: MatSort;
@@ -105,21 +120,21 @@ export class TableComponent {
     moveItemInArray(this.operations, event.previousIndex, event.currentIndex);
     if (event.currentIndex !== event.previousIndex) {
       this.tableService.timeChange(this.operations, event.currentIndex);
-      this.refreshDataInTable();
       this.updatedOperation.emit({
         type: 'update',
         operation: this.operations[event.currentIndex]
       });
+      this.refreshDataInTable();
     }
   }
 
   deleteOperation(operation: Operation): void {
     this.operations = this.operations.filter(operationFilter => operationFilter.id !== operation.id);
-    this.refreshDataInTable();
     this.updatedOperation.emit({
       type: 'delete',
       operation: operation
     });
+    this.refreshDataInTable();
     this.closeUserMenu();
   }
 
@@ -144,12 +159,38 @@ export class TableComponent {
         } else {
           operation.cashOut = result.amount;
         }
-        this.refreshDataInTable();
         this.updatedOperation.emit({
           type: 'update',
           operation: operation
         });
+        this.refreshDataInTable();
         this.closeUserMenu();
+      }
+    });
+  }
+
+  addOperation(): void {
+    const dialogRef = this.dialog.open(AddoperationDialogComponent, {
+      width: '400px',
+      data: null
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (typeof result !== undefined) {
+        const operation: Operation = {
+          id: 0,
+          userId: 0,
+          description: result.description,
+          timestamp: result.date,
+          cashIn: result.isCome ? result.amount : undefined,
+          cashOut: result.isCome ? undefined : result.amount,
+          balance: 0
+        };
+
+        this.updatedOperation.emit({
+          type: 'add',
+          operation: operation
+        });
       }
     });
   }
