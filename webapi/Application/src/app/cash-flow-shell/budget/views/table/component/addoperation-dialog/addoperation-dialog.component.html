@@ -5,17 +5,21 @@
   </mat-form-field>
 </p>
 
-<mat-form-field appearance="fill">
-  <mat-label>Date of transaction</mat-label>
-  <input matInput [matDatepicker]="picker" [(ngModel)]="dateInput">
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-  <mat-datepicker #picker></mat-datepicker>
-</mat-form-field>
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Date of transaction</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="dateInput">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+</div>
 
-<mat-radio-group aria-label="Select an option" [(ngModel)]="isCome">
-  <mat-radio-button value="Cash in">Cash in</mat-radio-button>
-  <mat-radio-button value="Cash out">Cash out</mat-radio-button>
-</mat-radio-group>
+<div>
+  <mat-radio-group class="container button-row" aria-label="Select an option" [(ngModel)]="isCome">
+    <mat-radio-button value="Cash in">Cash in</mat-radio-button>
+    <mat-radio-button class="button" value="Cash out">Cash out</mat-radio-button>
+  </mat-radio-group>
+</div>
 
 <p>
   <mat-form-field appearance="outline">
@@ -24,7 +28,7 @@
   </mat-form-field>
 </p>
 
-<div>
+<div class="container button-row">
   <button mat-raised-button (click)="onNoClick('save')">Save</button>
-  <button mat-raised-button (click)="onNoClick('close')">Cancel</button>
+  <button class="button" mat-raised-button (click)="onNoClick('close')">Cancel</button>
 </div>

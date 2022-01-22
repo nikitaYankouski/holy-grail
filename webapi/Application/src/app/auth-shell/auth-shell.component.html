@@ -2,21 +2,55 @@
   <mat-toolbar>
     <span>Cash Flow</span>
     <span class="example-spacer"></span>
-    <a routerLink='login' routerLinkActive="active">
-      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        Log in
-      </button>
-    </a>
+    
+    <button class="button" mat-stroked-button [routerLink]="['login']">
+      Log in
+    </button>
 
-    <a routerLink='sign' routerLinkActive="active">
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-        Sign Up
-      </button>
-    </a>
+    <button class = "button" mat-stroked-button [routerLink]="['sign']">
+      Sign Up
+    </button>
   </mat-toolbar>
 </p>
 <div>
-  <h2>
-    NOT AUTHORIZATION
-  </h2>
+  <mat-grid-list cols="2" rowHeight="2:1">
+    <mat-grid-tile>
+      <mat-card>
+        <div>
+          <h2>Cash Flow Datepicker</h2>
+        </div>
+        <div>
+            A simple yet powerful heatmap displays shades of green for positive 
+            cash balance days and red for any forecasted cash flow shortfalls for a rolling 
+            6 months in the future. You can also quickly perform a powerful what-if analysis 
+            to decide the best time to get a loan or when to delay paying a bill, all so you 
+            can see the impact on your cash flow.
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <picture class="picture">
+        <source media='(min-width:0px)' srcset="/assets/datepicker.png">
+        <img mat-card-image src="" alt="Photo of a Shiba Inu">
+      </picture>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <picture class="picture">
+        <source media='(min-width:0px)' srcset="/assets/chart.png">
+        <img mat-card-image src="" alt="Photo of a Shiba Inu">
+      </picture>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-card>
+        <div>
+          <h2>Export your forecast to img, CSV</h2>
+        </div>
+        <div>
+          Quickly export your forecast to a fully formatted worksheet to CSV, 
+          where you can see all your cash-in and cash-out transactions. You can easily add, 
+          remove and edit transactions to see the impact on your cash flow!
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>

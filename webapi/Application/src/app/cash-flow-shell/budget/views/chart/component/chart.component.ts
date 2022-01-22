@@ -3,6 +3,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@ang
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {Color, Label} from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
+import { saveAs } from 'file-saver';
 
 import {ChartService} from '../services/chart.service';
 import {Operation} from '../../../../operation';
@@ -17,6 +18,7 @@ import {ViewOperationChart} from '../view-operation-chart';
 import {BaseChartDirective} from 'ng2-charts';
 import {BudgetService} from '../../../budget.service';
 import {CrudOperation} from '../../../crud-operation';
+import * as FileSaver from 'file-saver';
 
 enum DirectionsChart {
   balance = 'BALANCE',
@@ -36,6 +38,8 @@ const crudType = {
   update: 'update',
   delete: 'delete'
 };
+
+const nameOfColumns = "id,description,timestamp,InOut,balance";
 
 @Component({
   selector: 'app-chart',
@@ -249,4 +253,16 @@ export class ChartComponent {
     link.download = 'chart.png';
     link.click();
   }
+
+  getCSV(): void {
+    let operationsToCSV = ""; 
+    this.groupedOperations.forEach(it =>  {
+      const inOut = typeof it.cashIn !== 'undefined' ? "1" : "0";
+      const transaction = it.id + "," + it.description + "," + it.timestamp + "," + inOut + "," +  it.balance + "\n";
+      operationsToCSV = operationsToCSV.concat(transaction);
+    });
+    var blob = new Blob([nameOfColumns + "\n", operationsToCSV], {type: "text/csv;charset=utf-8"});
+    FileSaver.saveAs(blob, "data.csv");
+  }
+  // id,description,timestamp,InOut,balance
 }

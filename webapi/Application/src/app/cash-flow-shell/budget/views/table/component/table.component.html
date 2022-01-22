@@ -1,5 +1,7 @@
 <div class="content">
-  <button mat-raised-button (click)="addOperation()">Add</button>
+  <div class="button-add">
+    <button mat-stroked-button (click)="addOperation()">new transaction</button>
+  </div>
   <!-- matSort matSortDisableClear (matSortChange)="sortData()"-->
   <table mat-table [dataSource]="dataSource"
          cdkDropList (cdkDropListDropped)="onDrop($event)" class="table">

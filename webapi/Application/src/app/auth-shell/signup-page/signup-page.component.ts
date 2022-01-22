@@ -9,6 +9,7 @@ import {HttpErrorResponse} from '@angular/common/http';
   styleUrls: ['./signup-page.component.scss']
 })
 export class SignupPageComponent implements OnInit {
+  hide = true;
 
   checkoutForm = this.formBuilder.group({
     username: null,

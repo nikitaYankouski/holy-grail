@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-auth-shell',
@@ -8,9 +9,13 @@ import { RouterModule } from '@angular/router';
 })
 export class AuthShellComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  goToLoginPage() {
+    this.router.navigateByUrl('/login');
   }
 
 }

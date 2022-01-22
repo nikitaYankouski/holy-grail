@@ -3,6 +3,7 @@ import {DateRange} from '../date-range';
 import {MatDialog} from '@angular/material/dialog';
 import {DatepickerDialogComponent} from './datepicker-dialog/datepicker-dialog.component';
 import {DatePeriodService} from './datepicker-dialog/date-period.service';
+import { TokenStorageService } from 'src/app/_services/token-storage.service';
 
 @Component({
   selector: 'app-filter-panel',
@@ -39,7 +40,8 @@ export class FilterPanelComponent implements OnInit{
   }
 
   constructor(
-    public dialog: MatDialog) { }
+    public dialog: MatDialog,
+    private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
     this.filterDateRange = DatePeriodService.initCurrentDatePeriod(new Date());
@@ -63,5 +65,9 @@ export class FilterPanelComponent implements OnInit{
         this.filterDateRange = result;
       }
     });
+  }
+
+  logout() {
+    this.tokenStorage.saveToken("");
   }
 }

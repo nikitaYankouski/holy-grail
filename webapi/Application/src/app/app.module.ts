@@ -10,6 +10,8 @@ import { MaterialModule } from './material/material.module'
 import { AppRoutingModule } from './app-routing.module';
 import { ChartsModule } from 'ng2-charts';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
 
 import { AppComponent } from './app.component';
 import { CashFlowShellComponent } from './cash-flow-shell/cash-flow-shell.component';
@@ -59,8 +61,10 @@ import { AddoperationDialogComponent } from './cash-flow-shell/budget/views/tabl
     BrowserAnimationsModule,
     HttpClientModule,
     ChartsModule,
+    MatCardModule,
     MatRadioModule,
     MaterialModule,
+    MatGridListModule,
     FormsModule,
     ReactiveFormsModule,
     NgxDaterangepickerMd.forRoot(),

@@ -1,3 +1,8 @@
+<div class="container-export button-row">
+     <button mat-stroked-button class="button" (click)="getImageChart()">image</button> 
+     <button mat-stroked-button class="button" (click)="getCSV()">CSV</button>
+</div>
+
 <div class="container">
   <canvas baseChart [datasets]="chartData" [labels]="chartLabels" [colors]="chartColors"
           [options]="chartOptions" [plugins]="chartPlugins" [legend]="chartLegend" [chartType]="chartType">
@@ -13,8 +18,4 @@
           [ngClass]="{'button-selected': currentGroupFilter.name === 'month'}">Month</button>
   <button mat-raised-button class="button" (click)="chooseGroupFilter('year')"
           [ngClass]="{'button-selected': currentGroupFilter.name === 'year'}">Year</button>
-</div>
-
-<div>
-  <button mat-raised-button (click)="getImageChart()">image</button>
 </div>

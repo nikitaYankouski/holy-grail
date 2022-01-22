@@ -2,48 +2,44 @@
   <mat-toolbar>
     <span>Cash Flow</span>
     <span class="example-spacer"></span>
-    <a routerLink='../login' routerLinkActive="active">
-      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-        Log in
-      </button>
-    </a>
-
-    <a routerLink='../sign' routerLinkActive="active">
-      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-        Sign Up
-      </button>
-    </a>
+    <button mat-stroked-button [routerLink]="['..']">
+      Back
+    </button>
   </mat-toolbar>
 </p>
 <div class="center" *ngIf="!isSuccessful">
   <form class="example-form" [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
-    <mat-form-field class="example-full-width" appearance="fill">
+    <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>Company name</mat-label>
       <input matInput formControlName="username">
     </mat-form-field>
 
-    <mat-form-field class="example-full-width" appearance="fill">
+    <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>Password</mat-label>
-      <input matInput formControlName="password">
+      <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+      <button mat-icon-button matSuffix (click)="hide = !hide" 
+        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+         <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
     </mat-form-field>
 
-    <mat-form-field class="example-full-width" appearance="fill">
+    <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>Email</mat-label>
       <input matInput formControlName="email">
     </mat-form-field>
 
-    <mat-form-field class="example-full-width" appearance="fill">
+    <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>Phone number</mat-label>
       <input matInput formControlName="phoneNumber">
     </mat-form-field>
-    <button type="submit" mat-raised-button>Submit</button>
+    <button type="submit" mat-raised-button color="primary">Submit</button>
   </form>
 </div>
 
-<div *ngIf="isSignUpFailed">
+<div *ngIf="isSignUpFailed" class="alert">
   <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
 </div>
 
-<div *ngIf="isSuccessful">
+<div *ngIf="isSuccessful" class="alert">
   <ngb-alert [type]="alert.type">{{ alert.message }}</ngb-alert>
 </div>
